@@ -1,0 +1,102 @@
+{
+  "scopeName": "source.icm",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#ini-sections" },
+    { "include": "#keystring-blocks" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.semicolon.icm", "match": ";.*$" },
+        { "name": "comment.line.number-sign.icm", "match": "#.*$" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        { "name": "string.quoted.double.icm", "begin": "\"", "end": "\"", "patterns": [{ "match": "\\\\.", "name": "constant.character.escape.icm" }] },
+        { "name": "string.quoted.single.icm", "begin": "'", "end": "'" }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.hex.icm", "match": "\\b&h[0-9a-fA-F]+\\b" },
+        { "name": "constant.numeric.decimal.icm", "match": "\\b\\d+(?:[.,]\\d+)?\\b" }
+      ]
+    },
+    "ini-sections": {
+      "patterns": [{
+        "name": "entity.name.tag.ini.icm",
+        "begin": "(\\[)",
+        "end": "(\\])",
+        "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.icm" } },
+        "endCaptures": { "1": { "name": "punctuation.definition.tag.end.icm" } }
+      }]
+    },
+    "keystring-blocks": {
+      "patterns": [{
+        "name": "meta.keystring.icm",
+        "begin": "(\\[)([A-Za-z_]+)(:)?",
+        "end": "(\\])",
+        "beginCaptures": {
+          "1": { "name": "punctuation.definition.block.begin.icm" },
+          "2": { "name": "entity.name.function.keyword.icm" },
+          "3": { "name": "punctuation.separator.key-value.icm" }
+        },
+        "endCaptures": {
+          "1": { "name": "punctuation.definition.block.end.icm" }
+        },
+        "patterns": [
+          { "include": "#strings" },
+          { "include": "#keystring-parameters" },
+          { "include": "#format-string-content" }
+        ]
+      }]
+    },
+    "keystring-parameters": {
+      "patterns": [
+        {
+          "name": "variable.parameter.icm",
+          "match": "\\b(Range|Records|Sort|Format|Admins|Boxes|WorkFlowStatus|OrderSelection|ContentType|CodingSystem|Items|InstanceID|TreatmentName|Notion|Export|Property|Type|Template|Target|Schedule|CaseLoop)\\b(?==)"
+        }
+      ]
+    },
+    "format-string-content": {
+      "patterns": [
+        {
+          "name": "meta.format-string.icm",
+          "begin": "(!)\\(",
+          "end": "\\)",
+          "beginCaptures": { "1": { "name": "keyword.operator.format-specifier.icm" } },
+          "patterns": [
+            { "include": "#macros" },
+            { "include": "#functions" }
+          ]
+        }
+      ]
+    },
+    "macros": {
+      "patterns": [
+        {
+          "name": "variable.language.macro.icm",
+          "begin": "\\{",
+          "end": "\\}",
+          "patterns": [{
+            "match": "\\b(Begin|End|Duration|Macro|CT_Dose|CT_SubstRate|Date|Code|CodeText|ItemText|FreeText|GroupName|TreatmentName|CurrentUser|PatientsAge|DBPath|IniPathRemote)\\b",
+            "name": "variable.other.placeholder.icm"
+          }]
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "support.function.math.icm",
+          "match": "\\b(Count|Sum|Min|Max|Avg|DecodeEq|DecodeLs|DecodeGr|Round|Greater|Less|Equal|In|Id|Ig|Abs|Fix|Int|Sgn)\\b"
+        }
+      ]
+    }
+  }
+}

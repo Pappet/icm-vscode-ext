@@ -1,0 +1,76 @@
+{
+    "name": "icm-dsl-support",
+    "displayName": "ICM DSL Support",
+    "description": "Syntax, Autocomplete und Hilfen für Dräger ICM Query-DSL.",
+    "version": "0.0.2",
+    "publisher": "your-name-or-org",
+    "engines": {
+        "vscode": "^1.79.2"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:icm-query"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "icm-query",
+                "aliases": [
+                    "ICM Query",
+                    "icm"
+                ],
+                "extensions": [
+                    ".icmq",
+                    ".jcf",
+                    ".template",
+                    ".txt"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "icm-query",
+                "scopeName": "source.icm",
+                "path": "./syntaxes/icm.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "icm-query",
+                "path": "./snippets/icm.code-snippets.json"
+            }
+        ],
+        "configuration": {
+            "title": "ICM DSL Support",
+            "properties": {
+                "icm.schemaPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Optionaler Pfad zur dsl_icm.json Schema-Datei (absolut oder relativ zum Workspace-Ordner)."
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "icm.reloadSchema",
+                "title": "ICM: Schema neu laden"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "@types/node": "^24.5.2",
+        "@types/vscode": "^1.92.0",
+        "typescript": "^5.6.2",
+        "vsce": "^2.15.0"
+    }
+}

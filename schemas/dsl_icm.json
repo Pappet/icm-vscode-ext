@@ -1,0 +1,303 @@
+{
+  "keywords": [
+    {
+      "name": "Orders",
+      "doc": "Gibt Daten aus der Tageskurve des aktuellen Falls aus. Benötigt fast immer einen 'Format'-Parameter, um nützlich zu sein.",
+      "required_params": ["Format"]
+    },
+    {
+      "name": "Reports",
+      "doc": "Gibt Daten aus den Beurteilungsseiten aus (z.B. Scores, Befunde).",
+      "required_params": ["Format", "Notion"]
+    },
+    {
+      "name": "Codes",
+      "doc": "Gibt codierte Klassifizierungscodes (ICD, OPS/ICPM, etc.) aus.",
+      "required_params": ["Format"]
+    },
+    {
+      "name": "D",
+      "doc": "Erstellt einen oder mehrere virtuelle Datensätze, ohne auf die Datenbank zuzugreifen. Ideal für Berechnungen mit statischen Makros.",
+      "required_params": ["Format"]
+    },
+    {
+      "name": "Pat",
+      "doc": "Gibt spezifische demographische Patientendaten aus.",
+      "required_params": ["Property"]
+    },
+    {
+      "name": "System",
+      "doc": "Gibt Daten zum aktuellen Systemstatus aus (z.B. aktueller Benutzer, Zeit).",
+      "required_params": ["Item"]
+    },
+    {
+      "name": "ScoreSum",
+      "doc": "Gibt die Summe der Ergebnispunkte einer bestimmten Bewertung (Score) aus.",
+      "required_params": ["ScoreDisplay"]
+    }
+  ],
+  "functions": [
+    {
+      "name": "In",
+      "signature": "In(x:number)",
+      "doc": "Natürlicher Logarithmus von x.",
+      "args": ["x"]
+    },
+    {
+      "name": "Id",
+      "signature": "Id(x:number)",
+      "doc": "Zweierlogarithmus von x.",
+      "args": ["x"]
+    },
+    {
+      "name": "Ig",
+      "signature": "Ig(x:number)",
+      "doc": "Logarithmus von x zur Basis 10.",
+      "args": ["x"]
+    },
+    {
+      "name": "Count",
+      "signature": "Count(x1:number, x2:number, ..., xN:number)",
+      "doc": "Anzahl der Argumente.",
+      "args": ["x1", "x2", "xN"]
+    },
+    {
+      "name": "Sum",
+      "signature": "Sum(x1:number, x2:number, ..., xN:number)",
+      "doc": "Summe der Argumente.",
+      "args": ["x1", "x2", "xN"]
+    },
+    {
+      "name": "Min",
+      "signature": "Min(x1:number, x2:number, ..., xN:number)",
+      "doc": "Mindestwert der Argumente.",
+      "args": ["x1", "x2", "xN"]
+    },
+    {
+      "name": "Max",
+      "signature": "Max(x1:number, x2:number, ..., xN:number)",
+      "doc": "Höchstwert der Argumente.",
+      "args": ["x1", "x2", "xN"]
+    },
+    {
+      "name": "Avg",
+      "signature": "Avg(x1:number, x2:number, ..., xN:number)",
+      "doc": "Durchschnittswert der Argumente.",
+      "args": ["x1", "x2", "xN"]
+    },
+    {
+      "name": "DecodeEq",
+      "signature": "DecodeEq(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
+      "doc": "Gibt das erste yi zurück, bei dem x=xi gilt. Sonst wird der Standardwert z zurückgegeben.",
+      "args": ["x", "x1", "y1", "xN", "yN", "z"]
+    },
+    {
+      "name": "DecodeLs",
+      "signature": "DecodeLs(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
+      "doc": "Gibt das erste yi zurück, bei dem x<xi gilt. Sonst wird der Standardwert z zurückgegeben.",
+      "args": ["x", "x1", "y1", "xN", "yN", "z"]
+    },
+    {
+      "name": "DecodeGr",
+      "signature": "DecodeGr(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
+      "doc": "Gibt das erste yi zurück, bei dem x>xi gilt. Sonst wird der Standardwert z zurückgegeben.",
+      "args": ["x", "x1", "y1", "xN", "yN", "z"]
+    },
+    {
+      "name": "Round",
+      "signature": "Round(x:number, n:number)",
+      "doc": "Rundung von x auf n Dezimalstellen.",
+      "args": ["x", "n"]
+    },
+    {
+      "name": "Greater",
+      "signature": "Greater(x:number, y:number)",
+      "doc": "Ergibt 1 wenn x > y, sonst 0.",
+      "args": ["x", "y"]
+    },
+    {
+      "name": "Less",
+      "signature": "Less(x:number, y:number)",
+      "doc": "Ergibt 1 wenn x < y, sonst 0.",
+      "args": ["x", "y"]
+    },
+    {
+      "name": "Equal",
+      "signature": "Equal(x:number, y:number)",
+      "doc": "Ergibt 1 wenn x = y, sonst 0.",
+      "args": ["x", "y"]
+    }
+  ],
+  "fields": [
+    {
+      "name": "Range",
+      "type": "Enum:RangeOptions oder <Zeitbereich>",
+      "doc": "Gibt den gewünschten Zeitbereich an. Mögliche Werte: Context, All, Past, Future oder eine spezifische Zeitbereichsdefinition."
+    },
+    {
+      "name": "Records",
+      "type": "Enum:RecordsOptions",
+      "doc": "Filtert Datensätze, die in den Zeitbereich fallen. Mögliche Werte: All, First, Last, First+Last, Distinct, Open, Assigned PreOP."
+    },
+    {
+      "name": "Sort",
+      "type": "string",
+      "doc": "Gibt die Sortierreihenfolge an. Syntax: '[-]Feldbezeichner1,[-]Feldbezeichner2'."
+    },
+    {
+      "name": "Format",
+      "type": "string",
+      "doc": "Definiert die Formatierungsanweisung für die Ausgabe."
+    },
+    {
+      "name": "Admins",
+      "type": "Enum:RecordsOptions",
+      "doc": "Gibt zusätzlich die einzelnen Verabreichungen einer Verordnungsspec aus (nur für Keyword 'Orders')."
+    },
+    {
+      "name": "WorkFlowStatus",
+      "type": "Enum:WorkFlowStatusOptions",
+      "doc": "Filtert die Datenausgabe nach dem Workflow-Status (nur für Keyword 'Orders')."
+    },
+    {
+      "name": "OrderSelection",
+      "type": "Enum:OrderSelectionOptions",
+      "doc": "Filtert auf aktuell in der Kurve ausgewählte Verordnungen (nur für Keyword 'Orders')."
+    },
+    {
+      "name": "CaseID",
+      "type": "number",
+      "doc": "ID des Falls, zu dem die Daten gehören."
+    },
+    {
+      "name": "OrderID",
+      "type": "number",
+      "doc": "ID der Verordnung."
+    },
+    {
+      "name": "TreatmentID",
+      "type": "number",
+      "doc": "ID der Maßnahme."
+    },
+    {
+      "name": "TreatmentName",
+      "type": "string",
+      "doc": "Bezeichnung der Maßnahme."
+    },
+    {
+      "name": "Begin",
+      "type": "date",
+      "doc": "Beginn-Zeit der Spec."
+    },
+    {
+      "name": "End",
+      "type": "date",
+      "doc": "Endzeit der Spec."
+    },
+    {
+      "name": "Duration",
+      "type": "number",
+      "doc": "Dauer der Spec."
+    },
+    {
+      "name": "Comment",
+      "type": "string",
+      "doc": "Anmerkungstext zur Spec."
+    },
+    {
+      "name": "ReportID",
+      "type": "number",
+      "doc": "ID des Reports, zu der der Eintrag gehört."
+    },
+    {
+      "name": "Code",
+      "type": "string",
+      "doc": "Der Klassifizierungscode (z.B. ICD, OPS)."
+    },
+    {
+      "name": "CodeText",
+      "type": "string",
+      "doc": "Text, der zum Code gehört."
+    },
+    {
+      "name": "CodingSystem",
+      "type": "string",
+      "doc": "ID des verwendeten Codiersystems."
+    },
+    {
+      "name": "Date",
+      "type": "date",
+      "doc": "Zeitpunkt des Reports, zu dem der Eintrag gehört."
+    },
+    {
+      "name": "Notion",
+      "type": "string",
+      "doc": "Bezeichnung des Begriffs, zu dem der Eintrag gehört."
+    },
+    {
+      "name": "DisplayName",
+      "type": "string",
+      "doc": "Anzeigename des Begriffs."
+    },
+    {
+      "name": "FreeText",
+      "type": "string",
+      "doc": "Freitext, der im Eingabedialog des Begriffs eingegeben wurde."
+    },
+    {
+      "name": "Findings",
+      "type": "string",
+      "doc": "Freitext, der in ein Befund-Textfeld eingegeben wurde."
+    }
+  ],
+  "enums": {
+    "RangeOptions": [
+      "Context",
+      "All",
+      "Past",
+      "Future"
+    ],
+    "RecordsOptions": [
+      "All",
+      "First",
+      "Last",
+      "First+Last",
+      "Distinct",
+      "Open",
+      "Assigned PreOP"
+    ],
+    "WorkFlowStatusOptions": [
+      "All",
+      "Planned",
+      "Confirmed",
+      "Overdue",
+      "NotAdminstered"
+    ],
+    "OrderSelectionOptions": [
+      "All",
+      "Selected",
+      "Current",
+      "New"
+    ],
+    "CaseLoopOptions": [
+      "None",
+      "Selected",
+      "Ward",
+      "Archive",
+      "All",
+      "Changed",
+      "WardHistory",
+      "History",
+      "File",
+      "DismissalExecuted",
+      "FinalizationExecuted",
+      "DismissalOrFinalizationExecuted",
+      "PreOPFinalizationExecuted"
+    ]
+  },
+  "examples": [
+    "[Orders: TreatmentName=Alupent*; Format=!({Begin} : {CT_Dose}\\CR)]",
+    "[Codes: Range=All; Records=Last; CodingSystem=2;InstanceID=5; Export={True};Format=!({Code}|{CodeText}|{MainDiagnosis}^{ReportID}^{Priority}^{Imported}^{RecordID}^{InstanceID}^{CodingSystemVersion}^{Foreign}^{AutoCoded}^{CareProvider ID}^{UserID}^{PrimaryCode}^{Export}^{CostCenter}^ {PointOfTime}|{CareProviderl D}|220\\CR)]",
+    "[Orders: TreatmentName=Beatmung; Range=All; WorkFlowStatus=Confirmed;Format=!({TreatmentName}|{Duration}|Dauer^h^{Begin}^{End}^{OrderID}|{Begin}||500\\CR)]"
+  ]
+}

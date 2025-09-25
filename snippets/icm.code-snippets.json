@@ -1,0 +1,72 @@
+{
+  "Abfrage der Tageskurve (Orders)": {
+    "prefix": "icmOrders",
+    "body": [
+      "[Orders: TreatmentName='${1:*}'; Range=${2:All}; Format=!({Begin}, {TreatmentName}, {Macro}\\CR)]"
+    ],
+    "description": "Erstellt eine Basisabfrage für Daten aus der Tageskurve (Keyword: Orders)."
+  },
+  "Abfrage von Beurteilungsseiten (Reports)": {
+    "prefix": "icmReports",
+    "body": [
+      "[Reports: Notion='${1:SAPS-Score}'; InstanceID=${2:2}; Records=${3:Last}; Format=!({Date}: {ItemText} {FreeText}\\CR)]"
+    ],
+    "description": "Erstellt eine Basisabfrage für Daten aus den Beurteilungsseiten (Keyword: Reports)."
+  },
+  "Abfrage von Diagnosen/Prozeduren (Codes)": {
+    "prefix": "icmCodes",
+    "body": [
+      "[Codes: CodingSystem=${1:ICD10}; Range=${2:All}; Format=!({Date}: {Code} {CodeText}\\CR)]"
+    ],
+    "description": "Erstellt eine Basisabfrage für kodierte Diagnosen oder Prozeduren (Keyword: Codes)."
+  },
+  "Abfrage von Patientendaten (Pat)": {
+    "prefix": "icmPat",
+    "body": [
+      "[Pat:Property=${1:Nachname},${2:Vorname}; Format=std_Patient]"
+    ],
+    "description": "Fragt spezifische demographische Patientendaten ab (Keyword: Pat)."
+  },
+  "Formatierungsanweisung mit Gruppierung": {
+    "prefix": "icmFormatGroup",
+    "body": [
+      "Format=!(({${1:GroupName}}): (WITHIN{${1:GroupName}}DO:\\LF\\TAB{${2:Macro}},) \\BKSP\\CR)"
+    ],
+    "description": "Fügt eine Formatierungsanweisung mit Gruppierung (WITHIN...DO) ein."
+  },
+  "Grundstruktur einer Job-Steuerdatei (.jcf)": {
+    "prefix": "icmJcf",
+    "body": [
+      "[JobControl]",
+      "Schedule=${1:NOW...NOW}",
+      "CaseLoop=${2|None,Selected,Ward,Archive,All,Changed,WardHistory,History,File|}",
+      "",
+      "[JobList]",
+      "${3:MeinJob}",
+      "",
+      "[${3:MeinJob}]",
+      "Type=${4|TextFile,WinWord,Excel,KeyWord,Printout|}",
+      "Template=${5:vorlage.txt}",
+      "Target=${6:ausgabe.txt}"
+    ],
+    "description": "Erstellt die Grundstruktur für eine ICM Export Job-Steuerdatei (.jcf)."
+  },
+  "Definition Abgeleiteter Parameter (Formel)": {
+    "prefix": "icmDpFormula",
+    "body": [
+      "[${1:MeinIndex}]",
+      "Source==\\$_${2:PaO2}/\\$_${3:FiO2}"
+    ],
+    "description": "Definiert einen abgeleiteten Parameter, der auf einer Formel basiert."
+  },
+  "Definition Abgeleiteter Verordnungsparameter": {
+    "prefix": "icmDop",
+    "body": [
+      "[${1:MeinParameter}]",
+      "Maßnahme=${2:FiO2*}",
+      "Range=CTX-1h...CTX",
+      "Funktion=${3|Last,First,Min,Max,Sum,Avg,Count|}"
+    ],
+    "description": "Definiert einen abgeleiteten Verordnungsparameter zum Abruf von Werten aus der Tageskurve."
+  }
+}

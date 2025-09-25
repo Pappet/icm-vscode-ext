@@ -1,0 +1,32 @@
+# Node.js & Dependency Management
+# Die Abhängigkeiten werden über 'npm install' wiederhergestellt und gehören nicht ins Repo.
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# VS Code Extension Build-Artefakte
+# Kompilierte TypeScript-Dateien
+out/
+dist/
+
+# Gepackte Extension-Datei
+*.vsix
+
+# VS Code Editor & Workspace-Dateien
+# Ignoriert benutzerspezifische Einstellungen, behält aber die Projektkonfiguration.
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
+
+# Test- & Coverage-Reports
+coverage/
+*.log
+
+# Betriebssystem-Dateien
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
