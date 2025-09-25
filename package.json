@@ -2,8 +2,8 @@
     "name": "icm-dsl-support",
     "displayName": "ICM DSL Support",
     "description": "Syntax, Autocomplete und Hilfen für Dräger ICM Query-DSL.",
-    "version": "0.0.2",
-    "publisher": "your-name-or-org",
+    "version": "0.0.3",
+    "publisher": "TODO",
     "engines": {
         "vscode": "^1.79.2"
     },
@@ -69,7 +69,7 @@
     },
     "devDependencies": {
         "@types/node": "^24.5.2",
-        "@types/vscode": "^1.92.0",
+        "@types/vscode": "^1.79.2",
         "typescript": "^5.6.2",
         "vsce": "^2.15.0"
     }
