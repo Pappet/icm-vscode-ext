@@ -187,17 +187,19 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
   const blockRegex = /\[([\s\S]*?)\]/g;
   let m: RegExpExecArray | null;
   while ((m = blockRegex.exec(text)) !== null) {
-    const block = m[1].trim();
-    const blockStart = m.index;
-    const colonIdx = block.indexOf(':');
+    const blockContent = m[1];
+    const blockStart = m.index + 1; // position directly after '['
+    const colonIdx = blockContent.indexOf(':');
     if (colonIdx < 0) continue;
-    const header = block.slice(0, colonIdx).trim();
-    const body = block.slice(colonIdx + 1).trim();
+    const headerSegment = blockContent.slice(0, colonIdx);
+    const header = headerSegment.trim();
+    const headerOffset = headerSegment.search(/\S/);
+    const kwStart = headerOffset >= 0 ? blockStart + headerOffset : blockStart;
+    const kwEnd = kwStart + header.length;
+    const bodyRaw = blockContent.slice(colonIdx + 1);
+    const body = bodyRaw.trim();
 
     // Keyword validieren und auf Pflicht-Parameter prüfen
-    const absStart = blockStart + 1;
-    const kwStart = absStart + text.slice(absStart).indexOf(header);
-    const kwEnd = kwStart + header.length;
 
     const keywordSpec = findKeyword(header);
     if (!keywordSpec) {
@@ -217,32 +219,61 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
       }
     }
 
-    const parts = body.split(';').map(s => s.trim()).filter(s => s.length > 0);
-    for (const part of parts) {
-      const eq = part.indexOf('=');
-      if (eq < 0) continue;
-      const key = part.slice(0, eq).trim();
-      const value = part.slice(eq + 1).trim();
-      const field = findField(key);
-      const absKeyStart = text.indexOf(key, blockStart);
+    const partsRegex = /([^;]+)(?:;|$)/g;
+    const seenFields = new Set<string>();
+    let partMatch: RegExpExecArray | null;
+    while ((partMatch = partsRegex.exec(bodyRaw)) !== null) {
+      const partText = partMatch[1];
+      const trimmedPart = partText.trim();
+      if (!trimmedPart) continue;
+
+      const eqIdx = partText.indexOf('=');
+      if (eqIdx < 0) continue;
+
+      const keySegment = partText.slice(0, eqIdx);
+      const key = keySegment.trim();
+      if (!key) continue;
+
+      const keySegmentOffset = keySegment.search(/\S/);
+      const partOffset = colonIdx + 1 + partMatch.index;
+      const keyStartOffset =
+        keySegmentOffset >= 0 ? partOffset + keySegmentOffset : partOffset;
+      const absKeyStart = blockStart + keyStartOffset;
       const absKeyEnd = absKeyStart + key.length;
 
+      if (seenFields.has(key)) {
+        diags.push(
+          makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist in diesem Block doppelt vorhanden.`)
+        );
+        continue;
+      }
+      seenFields.add(key);
+
+      const field = findField(key);
       if (!field) {
         diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Unbekanntes Feld '${key}'.`));
         continue;
       }
 
+      const valueSegment = partText.slice(eqIdx + 1);
+      const value = valueSegment.trim();
+      const valueSegmentOffset = valueSegment.search(/\S/);
+      const valueStartOffset =
+        valueSegmentOffset >= 0 ? partOffset + eqIdx + 1 + valueSegmentOffset : partOffset + eqIdx + 1;
+      const absValStart = blockStart + valueStartOffset;
+
       const enName = enumNameFromFieldType(field.type ?? '');
       if (enName && schema.enums?.[enName]) {
         const raw = stripValue(value);
         if (raw && !schema.enums[enName].includes(raw)) {
-          const absValStart = text.indexOf(value, absKeyEnd);
-          diags.push(makeDiag(
-            doc,
-            absValStart,
-            absValStart + value.length,
-            `Ungültiger Wert '${raw}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
-          ));
+          diags.push(
+            makeDiag(
+              doc,
+              absValStart,
+              absValStart + value.length,
+              `Ungültiger Wert '${raw}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
+            )
+          );
         }
       }
     }
