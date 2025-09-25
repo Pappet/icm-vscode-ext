@@ -248,6 +248,11 @@
       "name": "Findings",
       "type": "string",
       "doc": "Freitext, der in ein Befund-Textfeld eingegeben wurde."
+    },
+    {
+      "name": "InstanceID",
+      "type": "number",
+      "doc": "ID der Instanz eines Reports. "
     }
   ],
   "enums": {
