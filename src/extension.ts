@@ -15,8 +15,10 @@ type Schema = {
 };
 
 let schema: Schema = { keywords: [], functions: [], fields: [], enums: {}, examples: [] };
+let extensionRoot = '';
 
 export function activate(context: vscode.ExtensionContext) {
+  extensionRoot = context.extensionUri.fsPath;
   console.log('Herzlichen Glückwunsch, Ihre Extension "icm-dsl-support" ist jetzt aktiv!');
   vscode.window.showInformationMessage('ICM-DSL Extension wurde aktiviert!');
   loadSchema();
@@ -316,16 +318,22 @@ function resolveSchemaPath(): string | null {
   const p = cfg.get<string>('icm.schemaPath')?.trim() || '';
   const ws = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
+  let configuredPath: string | null = null;
   if (p) {
-    if (path.isAbsolute(p)) return p;
-    if (ws) return path.join(ws, p);
+    configuredPath = path.isAbsolute(p) ? p : ws ? path.join(ws, p) : null;
+    if (configuredPath && fs.existsSync(configuredPath)) {
+      return configuredPath;
+    }
   }
 
-  if (ws) {
-    const fallback = path.join(ws, 'schemas', 'dsl_icm.json');
-    if (fs.existsSync(fallback)) return fallback;
+  if (extensionRoot) {
+    const fallback = path.join(extensionRoot, 'schemas', 'dsl_icm.json');
+    if (fs.existsSync(fallback)) {
+      return fallback;
+    }
   }
-  return null;
+
+  return configuredPath;
 }
 
 function loadSchema(showErrors = false) {
