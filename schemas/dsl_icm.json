@@ -147,8 +147,8 @@
   "fields": [
     {
       "name": "Range",
-      "type": "Enum:RangeOptions oder <Zeitbereich>",
-      "doc": "Gibt den gewünschten Zeitbereich an. Mögliche Werte: Context, All, Past, Future oder eine spezifische Zeitbereichsdefinition."
+      "type": "Enum:RangeOptions | <Zeitbereich>",
+      "doc": "Gibt den gewünschten Zeitbereich an. Erlaubt sind feste Werte (`Context`, `All`, `Past`, `Future`) oder eine dynamische Definition wie `ADM...DIS` oder `CTX-24h...CTX`."
     },
     {
       "name": "Records",
