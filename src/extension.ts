@@ -83,17 +83,15 @@ class IcmCompletionProvider implements vscode.CompletionItemProvider {
     // 2) Fields nach 'Keyword:' oder nach '; '
     if (ctx.expectField && ctx.activeKeyword) {
         const keywordSpec = findKeyword(ctx.activeKeyword);
-        const allowedFields = keywordSpec?.fields ?? (schema.fields ?? []).map(f => f.name);
-
-        for (const fieldName of allowedFields) {
-            const f = findField(fieldName);
-            if (f) {
-                const ci = new vscode.CompletionItem(f.name, vscode.CompletionItemKind.Field);
-                ci.detail = f.type ?? 'field';
-                ci.documentation = f.doc ?? '';
-                ci.insertText = new vscode.SnippetString(`${f.name}=\${1}`);
-                items.push(ci);
-            }
+        // Fallback auf alle Felder, falls ein Keyword keine spezifische Liste hat
+        const allowedFieldsSource = keywordSpec?.fields ? (schema.fields ?? []).filter(f => keywordSpec.fields!.includes(f.name)) : (schema.fields ?? []);
+        
+        for (const f of allowedFieldsSource) {
+            const ci = new vscode.CompletionItem(f.name, vscode.CompletionItemKind.Field);
+            ci.detail = f.type ?? 'field';
+            ci.documentation = f.doc ?? '';
+            ci.insertText = new vscode.SnippetString(`${f.name}=\${1}`);
+            items.push(ci);
         }
     }
 
@@ -202,7 +200,6 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
     const blockStart = m.index + 1;
     const colonIdx = blockContent.indexOf(':');
     
-    // Fall ohne Parameter handhaben
     const headerSegment = colonIdx < 0 ? blockContent : blockContent.slice(0, colonIdx);
     const header = headerSegment.trim();
     const headerOffset = headerSegment.search(/\S/);
@@ -212,10 +209,9 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
     const keywordSpec = findKeyword(header);
     if (!keywordSpec) {
         diags.push(makeDiag(doc, kwStart, kwEnd, `Unbekanntes Keyword '${header}'.`));
-        continue; // Nächsten Block prüfen
+        continue;
     }
 
-    // Nur Parameter prüfen, wenn ein Doppelpunkt vorhanden ist
     if (colonIdx < 0) {
         continue;
     }
@@ -223,7 +219,6 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
     const bodyRaw = blockContent.slice(colonIdx + 1);
     const body = bodyRaw.trim();
     
-    // Warnung für fehlende Pflicht-Parameter
     for (const req of keywordSpec.required_params ?? []) {
         if (!body.includes(`${req}=`)) {
             diags.push(makeDiag(
@@ -266,11 +261,10 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
         }
         seenFields.add(key);
         
-        // **NEUE LOGIK**: Prüfen, ob das Feld für das Keyword erlaubt ist
         const allowedFields = keywordSpec.fields;
         if (allowedFields && !allowedFields.includes(key)) {
             diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist für Keyword '${header}' nicht gültig.`));
-            continue; // Mit dem nächsten Feld fortfahren
+            continue;
         }
 
         const field = findField(key);
@@ -285,19 +279,30 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
         const valueStartOffset =
             valueSegmentOffset >= 0 ? partOffset + eqIdx + 1 + valueSegmentOffset : partOffset + eqIdx + 1;
         const absValStart = blockStart + valueStartOffset;
+        const absValEnd = absValStart + value.length;
 
-        const enName = enumNameFromFieldType(field.type ?? '');
-        if (enName && schema.enums?.[enName]) {
-            const raw = stripValue(value);
-            if (raw && !schema.enums[enName].includes(raw)) {
+        // GEÄNDERT: Spezielle Validierung für 'Range'
+        if (field.name === 'Range') {
+            const rawValue = stripValue(value);
+            if (rawValue && !isValidRangeValue(rawValue)) {
                 diags.push(
-                    makeDiag(
-                        doc,
-                        absValStart,
-                        absValStart + value.length,
-                        `Ungültiger Wert '${raw}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
-                    )
+                    makeDiag(doc, absValStart, absValEnd, `Ungültiger Wert '${rawValue}' für Feld 'Range'.`)
                 );
+            }
+        } else {
+            const enName = enumNameFromFieldType(field.type ?? '');
+            if (enName && schema.enums?.[enName]) {
+                const raw = stripValue(value);
+                if (raw && !schema.enums[enName].includes(raw)) {
+                    diags.push(
+                        makeDiag(
+                            doc,
+                            absValStart,
+                            absValEnd,
+                            `Ungültiger Wert '${raw}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
+                        )
+                    );
+                }
             }
         }
     }
@@ -306,6 +311,35 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
 }
 
 // ---- Helpers ----
+
+// NEU: Eigene Validierungsfunktion für den Range-Parameter
+function isValidRangeValue(value: string): boolean {
+    if ((schema.enums?.RangeOptions ?? []).includes(value)) {
+        return true;
+    }
+
+    // Regex für einen einzelnen Zeitpunkt-Token
+    const zeitpunktToken = '(CTX|NOW|ADM|DIS|PAS|FUT|FOS|LOE|PK0|PKN|BDT|SOT|DSF|DSU)';
+    // Regex für ein optionales Intervall wie +1d oder -10h
+    const interval = '([+-]?\\d+[snmhdwqy])?';
+    // Regex für eine optionale Zeit wie @14:00
+    const time = '(@\\d{2}:\\d{2})?';
+    
+    const zeitpunktRegex = new RegExp(`^${zeitpunktToken}${interval}${time}$`);
+    
+    const parts = value.split('...');
+    if (parts.length > 2) return false; // Mehr als ein '...' ist ungültig
+    
+    // Prüft jeden Teil (Start und Ende) des Bereichs
+    for (const part of parts) {
+        if (part.trim() !== '' && !zeitpunktRegex.test(part.trim())) {
+            return false;
+        }
+    }
+    
+    return true; // Wenn alle Teile gültig (oder leer) sind, ist der Bereich gültig
+}
+
 function findKeyword(name: string): KeywordSpec | undefined {
   return (schema.keywords ?? []).find(k => k.name === name);
 }
@@ -355,11 +389,14 @@ function inferContext(textBefore: string, position: vscode.Position): {
 
       if (colonIndex === -1) {
           expectKeyword = true;
+          activeKeyword = blockContent.trim();
       } else {
           activeKeyword = blockContent.slice(0, colonIndex).trim();
-          const afterColon = /:[^;]*$/.test(blockContent);
-          const afterSemicolon = /;[ \t]*$/.test(blockContent);
-          expectField = afterColon || afterSemicolon;
+          const afterLastSemicolon = (blockContent.split(';').pop() ?? '');
+
+          if (!afterLastSemicolon.includes('=')) {
+              expectField = true;
+          }
       }
 
       const m = /([A-Za-z0-9_. +\-]+)=\s*$/.exec(blockContent);
