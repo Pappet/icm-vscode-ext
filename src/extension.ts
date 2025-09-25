@@ -3,11 +3,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Angepasste Typdefinitionen, um die neue Schema-Struktur zu unterstützen
-type KeywordSpec = { name: string; doc?: string; required_params?: string[] };
+type KeywordSpec = { 
+  name: string; 
+  doc?: string; 
+  required_params?: string[];
+  fields?: string[]; // Hinzugefügt: Liste der erlaubten Felder
+};
 type FunctionSpec = { name: string; signature?: string; doc?: string; args?: string[] };
 type FieldSpec = { name: string; type?: string; doc?: string };
 type Schema = {
-  keywords?: KeywordSpec[]; // Geändert von string[]
+  keywords?: KeywordSpec[];
   functions?: FunctionSpec[];
   fields?: FieldSpec[];
   enums?: Record<string, string[]>;
@@ -70,22 +75,28 @@ class IcmCompletionProvider implements vscode.CompletionItemProvider {
       for (const k of schema.keywords ?? []) {
         const ci = new vscode.CompletionItem(k.name, vscode.CompletionItemKind.Keyword);
         ci.detail = 'Keyword';
-        // Dokumentation aus dem Schema hinzufügen
         ci.documentation = new vscode.MarkdownString(k.doc ?? '');
         items.push(ci);
       }
     }
 
     // 2) Fields nach 'Keyword:' oder nach '; '
-    if (ctx.expectField) {
-      for (const f of schema.fields ?? []) {
-        const ci = new vscode.CompletionItem(f.name, vscode.CompletionItemKind.Field);
-        ci.detail = f.type ?? 'field';
-        ci.documentation = f.doc ?? '';
-        ci.insertText = new vscode.SnippetString(`${f.name}=\${1}`);
-        items.push(ci);
-      }
+    if (ctx.expectField && ctx.activeKeyword) {
+        const keywordSpec = findKeyword(ctx.activeKeyword);
+        const allowedFields = keywordSpec?.fields ?? (schema.fields ?? []).map(f => f.name);
+
+        for (const fieldName of allowedFields) {
+            const f = findField(fieldName);
+            if (f) {
+                const ci = new vscode.CompletionItem(f.name, vscode.CompletionItemKind.Field);
+                ci.detail = f.type ?? 'field';
+                ci.documentation = f.doc ?? '';
+                ci.insertText = new vscode.SnippetString(`${f.name}=\${1}`);
+                items.push(ci);
+            }
+        }
     }
+
 
     // 3) Enum-Werte direkt nach 'Field='
     if (ctx.enumForField) {
@@ -128,7 +139,7 @@ class IcmCompletionProvider implements vscode.CompletionItemProvider {
 
 class IcmHoverProvider implements vscode.HoverProvider {
   provideHover(document: vscode.TextDocument, position: vscode.Position) {
-    const range = document.getWordRangeAtPosition(position, /[A-Za-z_][A-Za-z0-9_]*/); // Präzisere Regex
+    const range = document.getWordRangeAtPosition(position, /[A-Za-z_][A-Za-z0-9_]*/);
     if (!range) return;
 
     const word = document.getText(range);
@@ -188,106 +199,115 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
   let m: RegExpExecArray | null;
   while ((m = blockRegex.exec(text)) !== null) {
     const blockContent = m[1];
-    const blockStart = m.index + 1; // position directly after '['
+    const blockStart = m.index + 1;
     const colonIdx = blockContent.indexOf(':');
-    if (colonIdx < 0) continue;
-    const headerSegment = blockContent.slice(0, colonIdx);
+    
+    // Fall ohne Parameter handhaben
+    const headerSegment = colonIdx < 0 ? blockContent : blockContent.slice(0, colonIdx);
     const header = headerSegment.trim();
     const headerOffset = headerSegment.search(/\S/);
     const kwStart = headerOffset >= 0 ? blockStart + headerOffset : blockStart;
     const kwEnd = kwStart + header.length;
-    const bodyRaw = blockContent.slice(colonIdx + 1);
-    const body = bodyRaw.trim();
-
-    // Keyword validieren und auf Pflicht-Parameter prüfen
-
+    
     const keywordSpec = findKeyword(header);
     if (!keywordSpec) {
-      diags.push(makeDiag(doc, kwStart, kwEnd, `Unbekanntes Keyword '${header}'.`));
-    } else {
-      // Warnung für fehlende Pflicht-Parameter
-      for (const req of keywordSpec.required_params ?? []) {
+        diags.push(makeDiag(doc, kwStart, kwEnd, `Unbekanntes Keyword '${header}'.`));
+        continue; // Nächsten Block prüfen
+    }
+
+    // Nur Parameter prüfen, wenn ein Doppelpunkt vorhanden ist
+    if (colonIdx < 0) {
+        continue;
+    }
+
+    const bodyRaw = blockContent.slice(colonIdx + 1);
+    const body = bodyRaw.trim();
+    
+    // Warnung für fehlende Pflicht-Parameter
+    for (const req of keywordSpec.required_params ?? []) {
         if (!body.includes(`${req}=`)) {
-          diags.push(makeDiag(
-            doc,
-            kwStart,
-            kwEnd,
-            `Für das Keyword '${header}' wird der Parameter '${req}' dringend empfohlen.`,
-            vscode.DiagnosticSeverity.Warning
-          ));
+            diags.push(makeDiag(
+                doc,
+                kwStart,
+                kwEnd,
+                `Für das Keyword '${header}' wird der Parameter '${req}' dringend empfohlen.`,
+                vscode.DiagnosticSeverity.Warning
+            ));
         }
-      }
     }
 
     const partsRegex = /([^;]+)(?:;|$)/g;
     const seenFields = new Set<string>();
     let partMatch: RegExpExecArray | null;
     while ((partMatch = partsRegex.exec(bodyRaw)) !== null) {
-      const partText = partMatch[1];
-      const trimmedPart = partText.trim();
-      if (!trimmedPart) continue;
+        const partText = partMatch[1];
+        const trimmedPart = partText.trim();
+        if (!trimmedPart) continue;
 
-      const eqIdx = partText.indexOf('=');
-      if (eqIdx < 0) continue;
+        const eqIdx = partText.indexOf('=');
+        if (eqIdx < 0) continue;
 
-      const keySegment = partText.slice(0, eqIdx);
-      const key = keySegment.trim();
-      if (!key) continue;
+        const keySegment = partText.slice(0, eqIdx);
+        const key = keySegment.trim();
+        if (!key) continue;
 
-      const keySegmentOffset = keySegment.search(/\S/);
-      const partOffset = colonIdx + 1 + partMatch.index;
-      const keyStartOffset =
-        keySegmentOffset >= 0 ? partOffset + keySegmentOffset : partOffset;
-      const absKeyStart = blockStart + keyStartOffset;
-      const absKeyEnd = absKeyStart + key.length;
+        const keySegmentOffset = keySegment.search(/\S/);
+        const partOffset = colonIdx + 1 + partMatch.index;
+        const keyStartOffset =
+            keySegmentOffset >= 0 ? partOffset + keySegmentOffset : partOffset;
+        const absKeyStart = blockStart + keyStartOffset;
+        const absKeyEnd = absKeyStart + key.length;
 
-      if (seenFields.has(key)) {
-        diags.push(
-          makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist in diesem Block doppelt vorhanden.`)
-        );
-        continue;
-      }
-      seenFields.add(key);
-
-      const field = findField(key);
-      if (!field) {
-        diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Unbekanntes Feld '${key}'.`));
-        continue;
-      }
-
-      const valueSegment = partText.slice(eqIdx + 1);
-      const value = valueSegment.trim();
-      const valueSegmentOffset = valueSegment.search(/\S/);
-      const valueStartOffset =
-        valueSegmentOffset >= 0 ? partOffset + eqIdx + 1 + valueSegmentOffset : partOffset + eqIdx + 1;
-      const absValStart = blockStart + valueStartOffset;
-
-      const enName = enumNameFromFieldType(field.type ?? '');
-      if (enName && schema.enums?.[enName]) {
-        const raw = stripValue(value);
-        if (raw && !schema.enums[enName].includes(raw)) {
-          diags.push(
-            makeDiag(
-              doc,
-              absValStart,
-              absValStart + value.length,
-              `Ungültiger Wert '${raw}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
-            )
-          );
+        if (seenFields.has(key)) {
+            diags.push(
+                makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist in diesem Block doppelt vorhanden.`)
+            );
+            continue;
         }
-      }
+        seenFields.add(key);
+        
+        // **NEUE LOGIK**: Prüfen, ob das Feld für das Keyword erlaubt ist
+        const allowedFields = keywordSpec.fields;
+        if (allowedFields && !allowedFields.includes(key)) {
+            diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist für Keyword '${header}' nicht gültig.`));
+            continue; // Mit dem nächsten Feld fortfahren
+        }
+
+        const field = findField(key);
+        if (!field) {
+            diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Unbekanntes Feld '${key}'.`));
+            continue;
+        }
+
+        const valueSegment = partText.slice(eqIdx + 1);
+        const value = valueSegment.trim();
+        const valueSegmentOffset = valueSegment.search(/\S/);
+        const valueStartOffset =
+            valueSegmentOffset >= 0 ? partOffset + eqIdx + 1 + valueSegmentOffset : partOffset + eqIdx + 1;
+        const absValStart = blockStart + valueStartOffset;
+
+        const enName = enumNameFromFieldType(field.type ?? '');
+        if (enName && schema.enums?.[enName]) {
+            const raw = stripValue(value);
+            if (raw && !schema.enums[enName].includes(raw)) {
+                diags.push(
+                    makeDiag(
+                        doc,
+                        absValStart,
+                        absValStart + value.length,
+                        `Ungültiger Wert '${raw}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
+                    )
+                );
+            }
+        }
     }
-  }
+}
   return diags;
 }
 
 // ---- Helpers ----
 function findKeyword(name: string): KeywordSpec | undefined {
   return (schema.keywords ?? []).find(k => k.name === name);
-}
-
-function isKnownKeyword(k: string): boolean {
-  return !!findKeyword(k);
 }
 
 function findField(name: string): FieldSpec | undefined {
@@ -317,32 +337,48 @@ function makeDiag(doc: vscode.TextDocument, start: number, end: number, message:
 function inferContext(textBefore: string, position: vscode.Position): {
   expectKeyword: boolean;
   expectField: boolean;
+  activeKeyword?: string;
   enumForField?: FieldSpec;
 } {
   const slice = textBefore.slice(Math.max(0, textBefore.length - 200));
-  const expectKeyword = /\[[^\]\n]*$/.test(slice) && !/:/.test(slice.split('[').pop() ?? '');
+  const lastOpenBracket = slice.lastIndexOf('[');
+  const lastCloseBracket = slice.lastIndexOf(']');
+  
+  let activeKeyword: string | undefined;
+  let expectKeyword = false;
   let expectField = false;
   let enumForField: FieldSpec | undefined;
 
-  const afterColon = /\[[^\]\n]*?:[^\]\n]*$/.test(slice);
-  const afterSemicolon = /;[ \t]*[^\]\n]*$/.test(slice);
-  expectField = afterColon || afterSemicolon;
+  if (lastOpenBracket > lastCloseBracket) { // Wir sind in einem Block
+      const blockContent = slice.slice(lastOpenBracket + 1);
+      const colonIndex = blockContent.indexOf(':');
 
-  const m = /([A-Za-z0-9_. +\-]+)=\s*$/.exec(slice);
-  if (m) {
-    const key = m[1].trim();
-    const f = findField(key);
-    if (f) {
-      const en = enumNameFromFieldType(f.type ?? '');
-      if (en && schema.enums?.[en]) {
-        enumForField = f;
-        expectField = false;
+      if (colonIndex === -1) {
+          expectKeyword = true;
+      } else {
+          activeKeyword = blockContent.slice(0, colonIndex).trim();
+          const afterColon = /:[^;]*$/.test(blockContent);
+          const afterSemicolon = /;[ \t]*$/.test(blockContent);
+          expectField = afterColon || afterSemicolon;
       }
-    }
+
+      const m = /([A-Za-z0-9_. +\-]+)=\s*$/.exec(blockContent);
+      if (m) {
+          const key = m[1].trim();
+          const f = findField(key);
+          if (f) {
+              const en = enumNameFromFieldType(f.type ?? '');
+              if (en && schema.enums?.[en]) {
+                  enumForField = f;
+                  expectField = false;
+              }
+          }
+      }
   }
 
-  return { expectKeyword, expectField, enumForField };
+  return { expectKeyword, expectField, activeKeyword, enumForField };
 }
+
 
 function resolveSchemaPath(): string | null {
   const cfg = vscode.workspace.getConfiguration();
