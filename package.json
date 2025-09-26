@@ -11,7 +11,7 @@
         "Programming Languages"
     ],
     "activationEvents": [
-        "onLanguage:icm-query"
+        "onLanguage:icm-query" 
     ],
     "main": "./dist/extension.js",
     "contributes": {

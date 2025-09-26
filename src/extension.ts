@@ -325,7 +325,7 @@ function isValidRangeValue(value: string): boolean {
     // Regex für eine optionale Zeit wie @14:00
     const time = '(@\\d{2}:\\d{2})?';
     
-    const zeitpunktRegex = new RegExp(`^${zeitpunktToken}${interval}${time}$`);
+    const zeitpunktRegex = new RegExp(`^${zeitpunktToken}${interval}${time}$`,'i');
     
     const parts = value.split('...');
     if (parts.length > 2) return false; // Mehr als ein '...' ist ungültig
