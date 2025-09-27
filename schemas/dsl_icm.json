@@ -2,188 +2,982 @@
   "keywords": [
     {
       "name": "Orders",
-      "doc": "Gibt Daten aus der Tageskurve des aktuellen Falls aus. Benötigt fast immer einen 'Format'-Parameter, um nützlich zu sein.",
-      "required_params": ["Format"],
+      "doc": "Gibt Daten aus der Tageskurve des aktuellen Falls aus. Da es keine standardmäßig verwendete Formatierungsanweisung gibt, ist die Angabe des 'Format'-Parameters erforderlich.",
+      "required_params": [
+        "Format"
+      ],
       "fields": [
-        "Range", "Records", "Sort", "Format", "Admins", "Boxes", "WorkFlowStatus", "OrderSelection", "ContentType", "Digits", "ExternalIDType", "ExternalID",
-        "CaseID", "OrderID", "TreatmentID", "TreatmentName", "TreatmentNameIsSubstance", "SubstanceUnit", "DoseUnit", "SubstanceIdent", "DrugIdent", "ModeID", "ModeName", "Discrete", "CategoryID", "GroupID", "GroupName", "GroupSequence", "HiliteID", "HilitePriority", "HiliteName", "ConfirmedUntil", "Undefined", "TotalNumSpecGroups", "TotalLength", "TotalDuration", "TotalNumAdmins", "TotalSubstanceOfOrder", "TotalSubstanceOfTreatment", "SpecID", "Begin", "Duration", "End", "Comment", "Box1V", "Box2V", "Box3V", "Box4V", "Box5V", "Box6V", "Box7V", "Box8V", "Box9V", "Box10V", "Box11V", "Box12V", "Box13V", "Box14V", "Box15V", "Macro", "TransferReportDoc", "DiluentInfo", "Findings", "FindingsAscii", "SpecGroupID", "LEP3SubCode", "LEP3Effort", "CareEffortCode_{System}", "CareEffort_{System}", "PercentileWeight", "PercentileLength", "PercentileHeadCF", "PercentileBMI", "BoxID", "BoxContentType", "BoxContentTypeName", "BoxContentTypeIdent", "BoxTextValue", "BoxNumValue", "BoxLabel", "BoxLabelCaption", "BoxLabelUnit", "AdminID", "AdminDate", "AdminTextValue", "AdminNumValue"
-      ]
-    },
-    {
-      "name": "Reports",
-      "doc": "Gibt Daten aus den Beurteilungsseiten aus (z.B. Scores, Befunde).",
-      "required_params": ["Format", "Notion"],
-      "fields": [
-        "Range", "Records", "Sort", "Format", "Items", "Digits", "ExternalIDType", "ExternalID",
-        "CaseID", "UserID", "InstanceID", "ReportID", "Date", "Notion", "DisplayName", "ItemSelectionID", "ItemText", "ItemID", "ItemName", "FreeText", "Findings", "RegisterPage", "Headline", "RegisterPageSequence", "NotionSequence", "HiliteID", "HiliteName", "HilitePriority", "FreeTextLabel", "UnValidated", "ParentNotion", "ParentNotionSequence", "RootNotionEntry", "IsLiquidNotion"
+        "CaseID",
+        "OrderID",
+        "TreatmentID",
+        "TreatmentName",
+        "TreatmentName-IsSubstance",
+        "SubstanceUnit",
+        "DoseUnit",
+        "SubstanceIdent",
+        "DrugIdent",
+        "ModeID",
+        "ModeName",
+        "Discrete",
+        "CategoryID",
+        "GroupID",
+        "GroupName",
+        "GroupSequence",
+        "HiliteID",
+        "HilitePriority",
+        "HiliteName",
+        "ConfirmedUntil",
+        "Undefined",
+        "TotalNumSpecGroups",
+        "TotalLength",
+        "TotalDuration",
+        "TotalNumAdmins",
+        "TotalSubstanceOfOrder",
+        "TotalSubstanceOfTreatment",
+        "SpecID",
+        "Begin",
+        "Duration",
+        "End",
+        "Comment",
+        "Box1V",
+        "Box2V",
+        "Box3V",
+        "Box4V",
+        "Box5V",
+        "Box6V",
+        "Box7V",
+        "Box8V",
+        "Box9V",
+        "Box10V",
+        "Box11V",
+        "Box12V",
+        "Box13V",
+        "Box14V",
+        "Box15V",
+        "Macro",
+        "TransferReportDoc",
+        "DiluentInfo",
+        "Findings",
+        "FindingsAscii",
+        "SpecGroupID",
+        "LEP3SubCode",
+        "LEP3Effort",
+        "CareEffortCode_{SystemName}",
+        "CareEffort_{SystemName}",
+        "PercentileWeight",
+        "PercentileLength",
+        "PercentileHeadCF",
+        "PercentileBMI",
+        "BoxID",
+        "BoxContentType",
+        "BoxContentTypeName",
+        "BoxContentTypeIdent",
+        "BoxTextValue",
+        "BoxNumValue",
+        "BoxLabel",
+        "BoxLabelCaption",
+        "BoxLabelUnit",
+        "AdminID",
+        "AdminDate",
+        "AdminTextValue",
+        "AdminNumValue",
+        "Format",
+        "Range",
+        "Records",
+        "Sort",
+        "Digits",
+        "ExternalIDType",
+        "ExternalID",
+        "Admins",
+        "Boxes",
+        "WorkFlowStatus",
+        "OrderSelection",
+        "ContentType"
       ]
     },
     {
       "name": "Codes",
-      "doc": "Gibt codierte Klassifizierungscodes (ICD, OPS/ICPM, etc.) aus.",
-      "required_params": ["Format"],
-       "fields": [
-        "Range", "Records", "Sort", "Format", "CodingSystem", "Digits",
-        "CaseID", "UserID", "InstanceID", "ReportID", "Code", "CodeText", "PointOfTime", "CareProviderID", "Foreign", "RecordID", "MainDiagnosis", "Imported", "AutoCoded", "CodeCount", "Priority", "Effort", "SeverityCode", "POTCode", "Export", "PrimaryCode", "Date", "CostCenter", "CareOU", "SortCrossStar"
+      "doc": "Gibt Daten aus, die mit Klassifizierungssystemen (ICD, ICPM, LEP, etc.) codiert wurden. Da es keine standardmäßig verwendete Formatierungsanweisung gibt, ist die Angabe des 'Format'-Parameters erforderlich.",
+      "required_params": [
+        "Format"
+      ],
+      "fields": [
+        "CaseID",
+        "UserID",
+        "InstanceID",
+        "ReportID",
+        "CodingSystem",
+        "Code",
+        "CodeText",
+        "PointOfTime",
+        "CareProviderID",
+        "Foreign",
+        "RecordID",
+        "MainDiagnosis",
+        "Imported",
+        "AutoCoded",
+        "CodeCount",
+        "Priority",
+        "Effort",
+        "SeverityCode",
+        "POTCode",
+        "Export",
+        "PrimaryCode",
+        "Date",
+        "CostCenter",
+        "CareOU",
+        "SortCrossStar",
+        "Format",
+        "Range",
+        "Records",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "Reports",
+      "doc": "Gibt Daten aus den Beurteilungsseiten des aktuellen Falls aus. Da es keine standardmäßig verwendete Formatierungsanweisung gibt, ist die Angabe des 'Format'-Parameters erforderlich.",
+      "required_params": [
+        "Format"
+      ],
+      "fields": [
+        "CaseID",
+        "UserID",
+        "InstanceID",
+        "ReportID",
+        "Date",
+        "Notion",
+        "DisplayName",
+        "ItemSelectionID",
+        "ItemText",
+        "ItemID",
+        "ItemName",
+        "FreeText",
+        "Findings",
+        "RegisterPage",
+        "Headline",
+        "RegisterPageSequence",
+        "NotionSequence",
+        "HiliteID",
+        "HiliteName",
+        "HilitePriority",
+        "FreeTextLabel",
+        "UnValidated",
+        "ParentNotion",
+        "ParentNotionSequence",
+        "RootNotionEntry",
+        "IsLiquidNotion",
+        "Format",
+        "Range",
+        "Records",
+        "Sort",
+        "Digits",
+        "ExternalIDType",
+        "ExternalID",
+        "Items"
+      ]
+    },
+    {
+      "name": "ReportsHist",
+      "doc": "Gibt aus den Beurteilungsseiten die dokumentierten Befundtexte mit einer Änderungshistorie aus.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Notion",
+        "Findings",
+        "RegisterPage",
+        "Headline",
+        "DisplayName",
+        "Date",
+        "UserID",
+        "RegisterPageSequence",
+        "NotionSequence",
+        "ChangeDate",
+        "UnValidated",
+        "Range"
+      ]
+    },
+    {
+      "name": "ReportsHistAll",
+      "doc": "Erweiterte Version von 'ReportsHist', die zusätzlich auch die Freitexte und Item-Texte mit Änderungshistorie ausgibt.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Notion",
+        "Findings",
+        "ItemText",
+        "FreeText",
+        "RegisterPage",
+        "Headline",
+        "DisplayName",
+        "Date",
+        "UserID",
+        "RegisterPageSequence",
+        "NotionSequence",
+        "ChangeDate",
+        "UnValidated",
+        "Range"
+      ]
+    },
+    {
+      "name": "Allergies",
+      "doc": "Gibt die für den aktuellen Fall dokumentierten Allergie-Informationen aus.",
+      "required_params": [],
+      "fields": [
+        "AllergyID",
+        "AllergenName",
+        "TypeID",
+        "TypeCode",
+        "TypeCodingSystem",
+        "TypeName",
+        "TypeDescription",
+        "TypeFhirCategory",
+        "NameID",
+        "NameCode",
+        "NameCodingSystem",
+        "NameName",
+        "NameDescription",
+        "SeverityID",
+        "SeverityCode",
+        "SeverityCodingSystem",
+        "SeverityName",
+        "SeveritySortKey",
+        "SeverityDescription",
+        "Remark",
+        "Reaction",
+        "IdentificationDate",
+        "IdentificationUser",
+        "Imported",
+        "ReactionID",
+        "ReactionTextValue",
+        "ReactionCode",
+        "ReactionCodingSystem",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "CodeEffort",
+      "doc": "Gibt die Summe des Aufwands (z.B. für LEP) im Hinblick auf codierte Datensätze des aktuellen Falls aus.",
+      "required_params": [
+        "InstanceID",
+        "CodingSystem"
+      ],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "CodingSystem",
+        "From",
+        "Until",
+        "SumEffort",
+        "Format",
+        "Range",
+        "Digits"
       ]
     },
     {
       "name": "D",
-      "doc": "Erstellt einen oder mehrere virtuelle Datensätze, ohne auf die Datenbank zuzugreifen. Ideal für Berechnungen mit statischen Makros.",
-      "required_params": ["Format"],
-      "fields": ["Count", "Period", "Time", "Format", "Range", "Digits"]
+      "doc": "Erstellt einen oder mehrere virtuelle Datensätze, ohne auf die Datenbank zuzugreifen. Kann verwendet werden, um Daten auszugeben, die vollständig von der Formatierungsanweisung berechnet werden. Da es keine standardmäßig verwendete Formatierungsanweisung gibt, ist die Angabe des 'Format'-Parameters erforderlich.",
+      "required_params": [
+        "Format"
+      ],
+      "fields": [
+        "Count",
+        "Period",
+        "Time",
+        "Format",
+        "Range",
+        "Digits"
+      ]
+    },
+    {
+      "name": "Mixtures",
+      "doc": "Gibt die geplanten Ernährungslösungen des aktuellen Falls aus.",
+      "required_params": [],
+      "fields": [
+        "MixturelD",
+        "StartDateTime",
+        "Duration",
+        "MixtureState",
+        "MixtureTreatmentID",
+        "MixtureTreatmentName",
+        "Continuous",
+        "MixedInfType",
+        "NumAdmins",
+        "Route",
+        "OrderFactor",
+        "Osmolarity",
+        "GlucoseConcentration",
+        "Comment",
+        "MixtureVolume",
+        "MixtureVolumeRate",
+        "MixtureOrderVolume",
+        "MixtureVolumeAdmin",
+        "MixtureOrderVolumeAdmin",
+        "SaveDateTime",
+        "UserID",
+        "IngredientID",
+        "IngredientTreatmentID",
+        "IngredientTreatmentName",
+        "Volume",
+        "VolumeRate",
+        "OrderVolume",
+        "VolumeAdmin",
+        "OrderVolumeAdmin",
+        "Density",
+        "DrySubstance",
+        "Percentage",
+        "Dose",
+        "DoseAdmin",
+        "OrderDose",
+        "OrderDoseAdmin",
+        "Format",
+        "Range",
+        "Sort",
+        "Digits"
+      ]
     },
     {
       "name": "Pat",
       "doc": "Gibt spezifische demographische Patientendaten aus. Verwendet die 'Property'-Syntax.",
-      "required_params": ["Property"],
-      "fields": ["Property", "Format"]
+      "required_params": [
+        "Property"
+      ],
+      "fields": [
+        "Property",
+        "Format"
+      ]
+    },
+    {
+      "name": "PatBedHistory",
+      "doc": "Gibt eine Liste der internen Transfers (Verlauf der Bettbelegung) des aktuellen Falls aus.",
+      "required_params": [],
+      "fields": [
+        "StartDateTime",
+        "StartTime",
+        "UserID",
+        "Bed",
+        "EndDateTime",
+        "EndTime",
+        "Format",
+        "Records",
+        "Digits"
+      ]
+    },
+    {
+      "name": "PatWard",
+      "doc": "Gibt Daten über den letzten Transfer, das aktuelle Bett und den entsprechenden Arbeitsplatz für den aktuellen Fall aus. Verwendet die 'Property'-Syntax.",
+      "required_params": [
+        "Property"
+      ],
+      "fields": [
+        "Property",
+        "Format"
+      ]
     },
     {
       "name": "System",
       "doc": "Gibt Daten zum aktuellen Systemstatus aus (z.B. aktueller Benutzer, Zeit). Verwendet die 'Item'-Syntax.",
-      "required_params": ["Item"],
-      "fields": ["Item", "Format"]
+      "required_params": [
+        "Item"
+      ],
+      "fields": [
+        "Item",
+        "Format"
+      ]
     },
     {
       "name": "ScoreSum",
-      "doc": "Gibt die Summe der Ergebnispunkte einer bestimmten Bewertung (Score) aus.",
-      "required_params": ["ScoreDisplay"],
-      "fields": ["From", "Until", "ScoreSum", "ScoreDisplay", "Range", "Format"]
-    }
-  ],
-  "functions": [
-    {
-      "name": "In",
-      "signature": "In(x:number)",
-      "doc": "Natürlicher Logarithmus von x.",
-      "args": ["x"]
+      "doc": "Gibt die Summe aller Score-Ergebnispunkte des aktuellen Falls innerhalb des Zeitraums aus, der durch den 'Range'-Parameter festgelegt wird.",
+      "required_params": [
+        "ScoreDisplay"
+      ],
+      "fields": [
+        "From",
+        "Until",
+        "ScoreSum",
+        "ScoreDisplay",
+        "Format",
+        "Range",
+        "Digits"
+      ]
     },
     {
-      "name": "Id",
-      "signature": "Id(x:number)",
-      "doc": "Zweierlogarithmus von x.",
-      "args": ["x"]
+      "name": "ScoreSumEpisodes",
+      "doc": "Gibt die Summe der Score-Ergebnispunkte aller Episoden des aktuellen Falls aus (mit derselben Aufnahmenummer).",
+      "required_params": [
+        "ScoreDisplay"
+      ],
+      "fields": [
+        "ScoreSum",
+        "ScoreDisplay",
+        "Format",
+        "Digits"
+      ]
     },
     {
-      "name": "Ig",
-      "signature": "Ig(x:number)",
-      "doc": "Logarithmus von x zur Basis 10.",
-      "args": ["x"]
+      "name": "HISPatient",
+      "doc": "Patientenstammdaten aus dem KIS. Zugriff über den 'Property'-Parameter.",
+      "required_params": [
+        "Property"
+      ],
+      "fields": [
+        "Property",
+        "Format"
+      ]
     },
     {
-      "name": "Count",
-      "signature": "Count(x1:number, x2:number, ..., xN:number)",
-      "doc": "Anzahl der Argumente.",
-      "args": ["x1", "x2", "xN"]
+      "name": "HISCase",
+      "doc": "Fallbezogene Stammdaten aus dem KIS. Zugriff über den 'Property'-Parameter.",
+      "required_params": [
+        "Property"
+      ],
+      "fields": [
+        "Property",
+        "Format"
+      ]
     },
     {
-      "name": "Sum",
-      "signature": "Sum(x1:number, x2:number, ..., xN:number)",
-      "doc": "Summe der Argumente.",
-      "args": ["x1", "x2", "xN"]
+      "name": "HISInsurance",
+      "doc": "Versicherungsdaten aus dem KIS. Zugriff über den 'Property'-Parameter.",
+      "required_params": [
+        "Property"
+      ],
+      "fields": [
+        "Property",
+        "Format"
+      ]
     },
     {
-      "name": "Min",
-      "signature": "Min(x1:number, x2:number, ..., xN:number)",
-      "doc": "Mindestwert der Argumente.",
-      "args": ["x1", "x2", "xN"]
+      "name": "HISOperation",
+      "doc": "Gibt Daten zu geplanten Operationen und präoperativen Visiten aus, die aus externen Quellen stammen.",
+      "required_params": [],
+      "fields": [
+        "HIS_CaseID",
+        "HIS_PatientID",
+        "OPID",
+        "OPDescription",
+        "OPDate",
+        "OPLocation",
+        "OPFunctionalArea",
+        "OPPrivate",
+        "OPSeptic",
+        "PreOPDate",
+        "PreOPLocation",
+        "PreOPResult",
+        "PreOPComment",
+        "PatInfection",
+        "Format",
+        "Records",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "Max",
-      "signature": "Max(x1:number, x2:number, ..., xN:number)",
-      "doc": "Höchstwert der Argumente.",
-      "args": ["x1", "x2", "xN"]
+      "name": "HISOperationMetaData",
+      "doc": "Gibt erweiterte Daten zu geplanten Operationen und präoperativen Visiten aus externen Quellen in Form von Key-Value-Paaren aus.",
+      "required_params": [],
+      "fields": [
+        "HIS_CaseID",
+        "HIS_PatientID",
+        "OPID",
+        "LabelNr",
+        "Label",
+        "Value",
+        "DateChanged",
+        "Rank",
+        "Format",
+        "Sort",
+        "Records",
+        "Digits"
+      ]
     },
     {
-      "name": "Avg",
-      "signature": "Avg(x1:number, x2:number, ..., xN:number)",
-      "doc": "Durchschnittswert der Argumente.",
-      "args": ["x1", "x2", "xN"]
+      "name": "HISDiagnoses",
+      "doc": "Gibt alle Diagnosen aus, die im KIS vorhanden sind und mit der Aufnahmenummer des aktuellen Falls in Verbindung stehen.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "HIS_CaseID",
+        "Date",
+        "Text",
+        "Description",
+        "Code",
+        "CodingSystem",
+        "TypeID",
+        "Type",
+        "WardID",
+        "WardName",
+        "DepartmentID",
+        "DepartmentName",
+        "LocationID",
+        "Location",
+        "PriorityID",
+        "Priority",
+        "AdditionID",
+        "AdditionText",
+        "Format",
+        "Records",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "DecodeEq",
-      "signature": "DecodeEq(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
-      "doc": "Gibt das erste yi zurück, bei dem x=xi gilt. Sonst wird der Standardwert z zurückgegeben.",
-      "args": ["x", "x1", "y1", "xN", "yN", "z"]
+      "name": "HISProcedures",
+      "doc": "Gibt alle Eingriffe aus, die im KIS vorhanden sind und mit der Aufnahmenummer des aktuellen Falls in Verbindung stehen.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "HIS_CaseID",
+        "Date",
+        "Text",
+        "Description",
+        "Code",
+        "CodingSystem",
+        "TypeID",
+        "Type",
+        "FunctionalAreaID",
+        "FunctionalAreaName",
+        "DepartmentID",
+        "DepartmentName",
+        "LocationID",
+        "Location",
+        "PriorityID",
+        "Priority",
+        "AdditionID",
+        "AdditionText",
+        "Duration",
+        "Format",
+        "Records",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "DecodeLs",
-      "signature": "DecodeLs(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
-      "doc": "Gibt das erste yi zurück, bei dem x<xi gilt. Sonst wird der Standardwert z zurückgegeben.",
-      "args": ["x", "x1", "y1", "xN", "yN", "z"]
+      "name": "PreOP",
+      "doc": "Gibt Daten zu geplanten OPs und Präoperativen Visiten aus. Diese können manuell oder bei der Aufnahme aus externen Quellen übernommen worden sein.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "SurgeryID",
+        "ChangeID",
+        "OP_ID",
+        "OP_Description",
+        "OP_Date",
+        "OP_Location",
+        "OP_FunctionalArea",
+        "OP_Private",
+        "OP_Private_Label",
+        "OP_Septic",
+        "PreOP_Location",
+        "PreOP_Result",
+        "PreOP_Date",
+        "PreOP_Comment",
+        "PreOP_Offline",
+        "PreOP_ExportDate",
+        "PreOP_Status",
+        "Pat_Infection",
+        "DateCreated",
+        "UserID",
+        "Imported",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "DecodeGr",
-      "signature": "DecodeGr(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
-      "doc": "Gibt das erste yi zurück, bei dem x>xi gilt. Sonst wird der Standardwert z zurückgegeben.",
-      "args": ["x", "x1", "y1", "xN", "yN", "z"]
+      "name": "ClappStatus",
+      "doc": "Liefert die vom SmartSonar Sepsis übermittelten Sepsis-Einstufungen für den selektierten Patienten.",
+      "required_params": [],
+      "fields": [
+        "ClappID",
+        "DomainID",
+        "CaseID",
+        "ParamID",
+        "RunningID",
+        "TStamp",
+        "DiagStatusID",
+        "DiagInfo",
+        "SessStatusID",
+        "SessInfo",
+        "Format",
+        "Range",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "Round",
-      "signature": "Round(x:number, n:number)",
-      "doc": "Rundung von x auf n Dezimalstellen.",
-      "args": ["x", "n"]
+      "name": "ClappData",
+      "doc": "Gibt die vom SmartSonar Sepsis übermittelten Konfigurationsdaten und Logbucheinträge aus.",
+      "required_params": [],
+      "fields": [
+        "ClappID",
+        "DomainID",
+        "CaseID",
+        "ParamID",
+        "RunningID",
+        "DataBlockIndex",
+        "TStamp",
+        "DataBlock",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "Greater",
-      "signature": "Greater(x:number, y:number)",
-      "doc": "Ergibt 1 wenn x > y, sonst 0.",
-      "args": ["x", "y"]
+      "name": "JobHosts",
+      "doc": "Erstellt eine Liste aller Hostrechner, die Jobs automatisiert ausführen.",
+      "required_params": [],
+      "fields": [
+        "HostID",
+        "ChangelD",
+        "WardID",
+        "WorkstationID",
+        "SearchPath",
+        "Period",
+        "LastPoll",
+        "AutoPause",
+        "JobControlCount",
+        "JobCount",
+        "dateCreated",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "Less",
-      "signature": "Less(x:number, y:number)",
-      "doc": "Ergibt 1 wenn x < y, sonst 0.",
-      "args": ["x", "y"]
+      "name": "ExportJobs",
+      "doc": "Listet alle Details zu erkannten JobControls auf.",
+      "required_params": [],
+      "fields": [
+        "JCFID",
+        "JCFName",
+        "HostID",
+        "Path",
+        "WardID",
+        "WorkstationID",
+        "JobCount",
+        "State",
+        "TriggerType",
+        "DateCreated",
+        "LastUpdated",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
     },
     {
-      "name": "Equal",
-      "signature": "Equal(x:number, y:number)",
-      "doc": "Ergibt 1 wenn x = y, sonst 0.",
-      "args": ["x", "y"]
+      "name": "ExportJobExecution",
+      "doc": "Exportiert eine Historie der ausgeführten Exportjobs (manuell und automatisch).",
+      "required_params": [],
+      "fields": [
+        "JCFID",
+        "RunningID",
+        "Cases",
+        "LastStart",
+        "LastFinish",
+        "NextRun",
+        "WardID",
+        "WorkstationID",
+        "UserID",
+        "Result",
+        "ErrorMessage",
+        "CurrentCaseID",
+        "CurrentExportJob",
+        "DateCreated",
+        "LastUpdated",
+        "HostID",
+        "JCFName",
+        "State",
+        "TriggerType",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "HISMDMRegister",
+      "doc": "Gibt alle über HL7 empfangenen Informationen zu externen Dokumenten des aktuellen Falls aus.",
+      "required_params": [],
+      "fields": [
+        "HIS_CaseID",
+        "HIS_PatientID",
+        "DocNr",
+        "DocName",
+        "DocType",
+        "FileType",
+        "PlacerOrderNr",
+        "FillerOrderNr",
+        "CompletionState",
+        "ConfidentialState",
+        "ChangeReason",
+        "Authenticator",
+        "Originator",
+        "OriginDate",
+        "EditDate",
+        "Link",
+        "DocState",
+        "Format",
+        "Range",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "Beds",
+      "doc": "Gibt alle Betten einer Station über den Schlüsselwort-Mechanismus aus.",
+      "required_params": [],
+      "fields": [
+        "BedIndex",
+        "Position",
+        "Remarks",
+        "TrainingOnly",
+        "WorkstationID",
+        "ShowAdmTime",
+        "SSG",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "R_AssessmentFreeTexts",
+      "doc": "Gibt alle Freitexteingaben der Beurteilungsseiten des aktuellen Falls aus, hauptsächlich für den Export in die Berichtsdatenbank. Unterstützt 'Sort'.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Notion",
+        "ReportDate",
+        "TextValue",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "R_AssessmentFindingTexts",
+      "doc": "Gibt alle Befundtexteingaben der Beurteilungsseiten des aktuellen Falls aus, hauptsächlich für den Export in die Berichtsdatenbank. Unterstützt 'Sort'.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Notion",
+        "ReportDate",
+        "TextValue",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "ReportsMainDiagMissing",
+      "doc": "Gibt Datensätze für Beurteilungsseiteninstanzen aus, bei denen die Hauptdiagnose mandatorisch ist, aber nicht ausgewählt wurde.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Date",
+        "RegisterPage",
+        "Headline",
+        "CodingSystem",
+        "CodingSystemName",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "ReportsMandatoryMissing",
+      "doc": "Gibt die Elemente aus den Beurteilungsseiten aus, die als mandatorisch konfiguriert sind, aber nicht eingetragen wurden. Betrachtet 'unvalidierte' Datensätze als fehlend.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Date",
+        "RegisterPage",
+        "Headline",
+        "Notion",
+        "DisplayName",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "ReportsMandatoryMissing_AcceptUnvalidated",
+      "doc": "Gibt die Elemente aus den Beurteilungsseiten aus, die als mandatorisch konfiguriert sind, aber nicht eingetragen wurden. Akzeptiert 'unvalidierte' Datensätze.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Date",
+        "RegisterPage",
+        "Headline",
+        "Notion",
+        "DisplayName",
+        "Format",
+        "Sort",
+        "Digits"
+      ]
+    },
+    {
+      "name": "ReportsLastValidatedSurgeryRelated",
+      "doc": "Ermittelt den Zeitstempel der letzten Änderung über alle Begriffe vom Typ 'immer sichtbar' und 'OP-spezifisch', die im Zustand 'unvalidiert' sind.",
+      "required_params": [],
+      "fields": [
+        "LastValidated",
+        "Format",
+        "Digits"
+      ]
+    },
+    {
+      "name": "ReportsLastValidatedNonSurgeryRelated",
+      "doc": "Ermittelt den Zeitstempel der letzten Änderung über alle Begriffe vom Typ 'immer sichtbar' (aber nicht 'OP-spezifisch'), die im Zustand 'unvalidiert' sind.",
+      "required_params": [],
+      "fields": [
+        "LastValidated",
+        "Format",
+        "Digits"
+      ]
+    },
+    {
+      "name": "ScoreRawData",
+      "doc": "Liefert Informationen zu den Rohdaten, die zum automatischen Ausfüllen der Score-Felder verwendet werden.",
+      "required_params": [],
+      "fields": [
+        "CaseID",
+        "InstanceID",
+        "ReportID",
+        "Notion",
+        "Date",
+        "UserID",
+        "ItemID",
+        "Param",
+        "RawValue",
+        "RawValueDateTime",
+        "DisplayName",
+        "ItemName",
+        "ScoreID",
+        "ScoreName",
+        "ScoreDisplay",
+        "Format",
+        "Range",
+        "Digits"
+      ]
+    },
+    {
+      "name": "SubjectiveFactor",
+      "doc": "Gibt den Durchschnitt der subjektiven Faktoren aus, die auf Beurteilungsseiten für LEP dokumentiert wurden.",
+      "required_params": [
+        "Notion"
+      ],
+      "fields": [
+        "From",
+        "Until",
+        "AvgSubjectiveFactor",
+        "Notion",
+        "Format",
+        "Range",
+        "Digits"
+      ]
     }
   ],
   "fields": [
     {
+      "name": "Property",
+      "type": "string",
+      "doc": "Gibt an, welche Datenfelder (Spalten) für spezielle Keywords wie 'Pat' und 'PatWard' ausgegeben werden sollen. Der Wert ist eine durch Kommata getrennte Liste von Spaltennamen."
+    },
+    {
+      "name": "Label",
+      "type": "string",
+      "doc": "Eine lesbare Beschriftung (max. 25 Zeichen) für einen abgeleiteten Parameter, die hauptsächlich im Rahmen der Regelprüfung verwendet wird."
+    },
+    {
       "name": "Range",
       "type": "Enum:RangeOptions | <Zeitbereich>",
-      "doc": "Gibt den gewünschten Zeitbereich an. Erlaubt sind feste Werte (`Context`, `All`, `Past`, `Future`) oder eine dynamische Definition wie `ADM...DIS` oder `CTX-24h...CTX`."
-    },
-    {
-      "name": "Records",
-      "type": "Enum:RecordsOptions",
-      "doc": "Filtert Datensätze, die in den Zeitbereich fallen. Mögliche Werte: All, First, Last, First+Last, Distinct, Open, Assigned PreOP."
-    },
-    {
-      "name": "Sort",
-      "type": "string",
-      "doc": "Gibt die Sortierreihenfolge an. Syntax: '[-]Feldbezeichner1,[-]Feldbezeichner2'."
+      "doc": "Gibt den gewünschten Zeitbereich an, aus dem Daten berücksichtigt werden sollen. Erlaubte Werte sind 'Context', 'All', 'Past', 'Future' oder ein dynamischer Zeitbereich wie 'ADM...NOW+1d'. Syntax-Hinweis: Zeitangaben wie ADM+1d@14:00, CTX-24h; Einheiten s/n/h/d/w/m/q/y."
     },
     {
       "name": "Format",
       "type": "string",
-      "doc": "Definiert die Formatierungsanweisung für die Ausgabe."
+      "doc": "Gibt die Formatierungsanweisung für die Ausgabe an. Dem Code muss ein '!' vorangestellt werden, z.B. Format=!({Spaltenname}\\CR)."
+    },
+    {
+      "name": "Records",
+      "type": "Enum:RecordsOptions",
+      "doc": "Definiert einen Filter, der auf die Datensätze im ausgewählten Zeitbereich angewendet wird. Mögliche Werte sind 'All', 'First', 'Last', 'First+Last', 'Distinct', 'Open', 'AssignedPreOP'."
+    },
+    {
+      "name": "Sort",
+      "type": "string",
+      "doc": "Gibt die gewünschte Sortierreihenfolge an. Ein vorangestelltes '-' sortiert absteigend, z.B. Sort=-Date,TreatmentName."
     },
     {
       "name": "Admins",
       "type": "Enum:RecordsOptions",
-      "doc": "Gibt zusätzlich die einzelnen Verabreichungen einer Verordnungsspec aus (nur für Keyword 'Orders')."
+      "doc": "Gibt zusätzlich die einzelnen Verabreichungen einer Verordnungsspec aus (nur mit KeyWord 'Orders'). Mögliche Werte sind die gleichen wie bei 'Records'. Kein Standardwert; nur in Kombination mit Orders nutzbar."
+    },
+    {
+      "name": "Boxes",
+      "type": "string",
+      "doc": "Wenn auf 'All' gesetzt, werden für jedes Kombinationslistenfeld der Verordnung zusätzliche Zeilen ausgegeben (nur mit KeyWord 'Orders'). Nur möglicher Wert: 'All'."
     },
     {
       "name": "WorkFlowStatus",
       "type": "Enum:WorkFlowStatusOptions",
-      "doc": "Filtert die Datenausgabe nach dem Workflow-Status (nur für Keyword 'Orders')."
+      "doc": "Filtert die Datenausgabe nach dem Workflow-Status (nur mit KeyWord 'Orders'). Mögliche Werte sind 'All', 'Planned', 'Confirmed', 'Overdue', 'NotAdministered'."
     },
     {
       "name": "OrderSelection",
       "type": "Enum:OrderSelectionOptions",
-      "doc": "Filtert auf aktuell in der Kurve ausgewählte Verordnungen (nur für Keyword 'Orders')."
+      "doc": "Gibt nur Daten für Verordnungen aus, die derzeit in der Kurve ausgewählt sind (nur mit KeyWord 'Orders'). Mögliche Werte sind 'All', 'Selected', 'Current', 'New'. Gültig nur während die Tageskurve angezeigt wird."
+    },
+    {
+      "name": "ContentType",
+      "type": "string",
+      "doc": "Filtert auf Verordnungen, die Felder mit den angegebenen Inhaltstypen enthalten (nur mit KeyWord 'Orders'), z.B. ContentType=Dose,VolumeRate. Verwendet offizielle Inhaltstyp-Bezeichner."
+    },
+    {
+      "name": "Digits",
+      "type": "number | string",
+      "doc": "Ändert die Standardformatierung von Fließkommazahlen, z.B. Digits=2 oder Digits=##0.00."
+    },
+    {
+      "name": "ExternalIDType",
+      "type": "string",
+      "doc": "Filtert auf Verordnungen oder Begriffseinträge, die eine ID im angegebenen externen Typ haben (nur mit 'Orders' und 'Reports'). Unterstützt mehrere, komma-getrennte Typen."
+    },
+    {
+      "name": "ExternalID",
+      "type": "string",
+      "doc": "Filtert auf die angegebene externe ID (nur in Kombination mit 'ExternalIDType')."
+    },
+    {
+      "name": "CodingSystem",
+      "type": "string",
+      "doc": "Gibt das gewünschte Codiersystem an (nur mit KeyWord 'Codes'), z.B. ICPM, ICD10, LEP."
+    },
+    {
+      "name": "Items",
+      "type": "string",
+      "doc": "Wenn auf 'All' gesetzt, wird jeder angekreuzte Begriffseintrag einzeln ausgegeben (nur mit KeyWord 'Reports')."
     },
     {
       "name": "CaseID",
       "type": "number",
-      "doc": "ID des Falls, zu dem die Daten gehören."
+      "doc": "ID des Falls, zu dem der Datensatz gehört."
     },
     {
       "name": "OrderID",
@@ -201,24 +995,364 @@
       "doc": "Bezeichnung der Maßnahme."
     },
     {
+      "name": "TreatmentName-IsSubstance",
+      "type": "boolean",
+      "doc": "-1: TreatmentName entspricht auch dem Namen des Wirkstoffs. 0: TreatmentName entspricht nicht dem Namen des Wirkstoffs."
+    },
+    {
+      "name": "SubstanceUnit",
+      "type": "string",
+      "doc": "Wirkstoffeinheit der Maßnahme."
+    },
+    {
+      "name": "DoseUnit",
+      "type": "string",
+      "doc": "Dosierungseinheit der Maßnahme."
+    },
+    {
+      "name": "SubstanceIdent",
+      "type": "string",
+      "doc": "Wirkstoff-ID der Maßnahme."
+    },
+    {
+      "name": "DrugIdent",
+      "type": "string",
+      "doc": "Medikamentenbezeichner der Maßnahme (für Pumpenschnittstelle)."
+    },
+    {
+      "name": "ModeID",
+      "type": "number",
+      "doc": "ID des Modus der Verordnung."
+    },
+    {
+      "name": "ModeName",
+      "type": "string",
+      "doc": "Name des Modus der Verordnung."
+    },
+    {
+      "name": "Discrete",
+      "type": "boolean",
+      "doc": "0: Modus ist kontinuierlich (mit Leisten). 1: Modus ist diskret (mit Markern)."
+    },
+    {
+      "name": "CategoryID",
+      "type": "number",
+      "doc": "ID der Kategorie."
+    },
+    {
+      "name": "GroupID",
+      "type": "number",
+      "doc": "ID der Gruppe."
+    },
+    {
+      "name": "GroupName",
+      "type": "string",
+      "doc": "Bezeichnung der Gruppe."
+    },
+    {
+      "name": "GroupSequence",
+      "type": "number",
+      "doc": "Sortierschlüssel der Gruppe (legt die Reihenfolge innerhalb der Gruppe fest)."
+    },
+    {
+      "name": "HiliteID",
+      "type": "number",
+      "doc": "ID des Hervorhebungsstatus der Verordnung."
+    },
+    {
+      "name": "HilitePriority",
+      "type": "number",
+      "doc": "Prioritätswert des Hervorhebungsstatus der Verordnung."
+    },
+    {
+      "name": "HiliteName",
+      "type": "string",
+      "doc": "Bezeichnung des Hervorhebungsstatus der Verordnung."
+    },
+    {
+      "name": "ConfirmedUntil",
+      "type": "datetime",
+      "doc": "Zeitpunkt der letzten Bestätigung der Verordnung."
+    },
+    {
+      "name": "Undefined",
+      "type": "boolean",
+      "doc": "0: Verordnung ist definiert. 1: Verordnung ist undefiniert."
+    },
+    {
+      "name": "TotalNumSpecGroups",
+      "type": "number",
+      "doc": "Gesamtzahl der Spec-Gruppen im bestätigten Teil der Verordnung."
+    },
+    {
+      "name": "TotalLength",
+      "type": "number",
+      "doc": "Zeit in Stunden, die zwischen dem Beginn der ersten Spec und der letzten Bestätigung vergangen ist."
+    },
+    {
+      "name": "TotalDuration",
+      "type": "number",
+      "doc": "Aktive Ausführungszeit im bestätigten Teil der Verordnung insgesamt in Stunden."
+    },
+    {
+      "name": "TotalNumAdmins",
+      "type": "number",
+      "doc": "Gesamtzahl der Verabreichungen im bestätigten Teil der Verordnung."
+    },
+    {
+      "name": "TotalSubstanceOfOrder",
+      "type": "number",
+      "doc": "Gesamtsubstanz [SubstanceUnit], die im bestätigten Teil der Verordnung verabreicht wurde."
+    },
+    {
+      "name": "TotalSubstanceOfTreatment",
+      "type": "number",
+      "doc": "Gesamtsubstanz [SubstanceUnit], die in den bestätigten Teilen aller Verordnungen mit derselben Maßnahme verabreicht wurde."
+    },
+    {
+      "name": "SpecID",
+      "type": "number",
+      "doc": "Laufende Nummer der Spec."
+    },
+    {
       "name": "Begin",
-      "type": "date",
+      "type": "datetime",
       "doc": "Beginn-Zeit der Spec."
     },
     {
-      "name": "End",
-      "type": "date",
-      "doc": "Endzeit der Spec."
+      "name": "Duration",
+      "type": "string",
+      "doc": "Dauer der Spec."
     },
     {
-      "name": "Duration",
-      "type": "number",
-      "doc": "Dauer der Spec."
+      "name": "End",
+      "type": "datetime",
+      "doc": "Endzeit der Spec."
     },
     {
       "name": "Comment",
       "type": "string",
       "doc": "Anmerkungstext zur Spec."
+    },
+    {
+      "name": "Box1V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 1."
+    },
+    {
+      "name": "Box2V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 2."
+    },
+    {
+      "name": "Box3V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 3."
+    },
+    {
+      "name": "Box4V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 4."
+    },
+    {
+      "name": "Box5V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 5."
+    },
+    {
+      "name": "Box6V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 6."
+    },
+    {
+      "name": "Box7V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 7."
+    },
+    {
+      "name": "Box8V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 8."
+    },
+    {
+      "name": "Box9V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 9."
+    },
+    {
+      "name": "Box10V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 10."
+    },
+    {
+      "name": "Box11V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 11."
+    },
+    {
+      "name": "Box12V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 12."
+    },
+    {
+      "name": "Box13V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 13."
+    },
+    {
+      "name": "Box14V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 14."
+    },
+    {
+      "name": "Box15V",
+      "type": "string",
+      "doc": "Wert des Kombinationslistenfeldes 15."
+    },
+    {
+      "name": "Macro",
+      "type": "string",
+      "doc": "FullDisplayMacro für die aktuelle Spec. Gibt dieselben Daten aus wie der Tooltip für den entsprechenden Marker in der Kurve."
+    },
+    {
+      "name": "TransferReportDoc",
+      "type": "string",
+      "doc": "Vollständiger Pfad zum WinWord-Dokument für die aktuelle Spec."
+    },
+    {
+      "name": "DiluentInfo",
+      "type": "string",
+      "doc": "Aufziehanleitung für Medikament mit Trägerlösung."
+    },
+    {
+      "name": "Findings",
+      "type": "string",
+      "doc": "Gibt für mikrobiologische und radiologische Modi die vollständigen Befunde und Antibiogramme, inklusive Formatierung, aus."
+    },
+    {
+      "name": "FindingsAscii",
+      "type": "string",
+      "doc": "Wie 'Findings', aber ohne Schriftartattribute (für ASCII-Ziele)."
+    },
+    {
+      "name": "SpecGroupID",
+      "type": "number",
+      "doc": "Laufende Nummer der Spec-Gruppe, der die aktuelle Spec angehört."
+    },
+    {
+      "name": "LEP3SubCode",
+      "type": "string",
+      "doc": "LEP3-Code, der der Maßnahme zugewiesen ist."
+    },
+    {
+      "name": "LEP3Effort",
+      "type": "number",
+      "doc": "Im Verordnungsdialog eingetragener Pflegeaufwand oder der Standard-Aufwand des LEP3-Codes."
+    },
+    {
+      "name": "CareEffortCode_{SystemName}",
+      "type": "string",
+      "doc": "Code, der der Maßnahme für das angegebene Pflegeaufwandsystem zugewiesen ist."
+    },
+    {
+      "name": "CareEffort_{SystemName}",
+      "type": "number",
+      "doc": "Eingetragener Pflegeaufwand für das angegebene Pflegeaufwandsystem."
+    },
+    {
+      "name": "PercentileWeight",
+      "type": "number",
+      "doc": "Prozentwert [%] des Gewichts-Perzentils zur Beginn-Zeit der Spec."
+    },
+    {
+      "name": "PercentileLength",
+      "type": "number",
+      "doc": "Prozentwert [%] der Körperlängen-Perzentils zur Beginn-Zeit der Spec."
+    },
+    {
+      "name": "PercentileHeadCF",
+      "type": "number",
+      "doc": "Prozentwert [%] des Kopfumfangs-Perzentils zur Beginn-Zeit der Spec."
+    },
+    {
+      "name": "PercentileBMI",
+      "type": "number",
+      "doc": "Prozentwert [%] des BMI-Perzentils zur Beginn-Zeit der Spec."
+    },
+    {
+      "name": "BoxID",
+      "type": "number",
+      "doc": "Eindeutige ID des Kombinationslistenfelds (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxContentType",
+      "type": "number",
+      "doc": "Interne ID des Typs der in BoxID enthaltenen Daten (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxContentTypeName",
+      "type": "string",
+      "doc": "Name des Inhaltstyps (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxContentTypeIdent",
+      "type": "string",
+      "doc": "Bezeichner des Inhaltstyps (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxTextValue",
+      "type": "string",
+      "doc": "Wert der aktuellen Spec im Kombinationslistenfeld BoxID (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxNumValue",
+      "type": "number",
+      "doc": "Numerische Repräsentation von BoxTextValue, falls numerisch (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxLabel",
+      "type": "string",
+      "doc": "Beschriftung des Kombinationslistenfeldes (wie im Verordnungsdialog) (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxLabelCaption",
+      "type": "string",
+      "doc": "Teil der Beschriftung ohne die Einheit (nur mit Boxes=All)."
+    },
+    {
+      "name": "BoxLabelUnit",
+      "type": "string",
+      "doc": "Nur die Einheit (Text in eckigen Klammern) der Beschriftung (nur mit Boxes=All)."
+    },
+    {
+      "name": "AdminID",
+      "type": "number",
+      "doc": "Laufende Nummer der Verabreichung innerhalb der Spec (nur mit Admins=All)."
+    },
+    {
+      "name": "AdminDate",
+      "type": "datetime",
+      "doc": "Zeitpunkt der Verabreichung (nur mit Admins=All)."
+    },
+    {
+      "name": "AdminTextValue",
+      "type": "string",
+      "doc": "TDisplayMacro für die aktuelle Verabreichung (der am Marker angezeigte Wert) (nur mit Admins=All)."
+    },
+    {
+      "name": "AdminNumValue",
+      "type": "number",
+      "doc": "Numerische Repräsentation von AdminTextValue, falls numerisch (nur mit Admins=All)."
+    },
+    {
+      "name": "UserID",
+      "type": "number",
+      "doc": "ID des Benutzers, der das Element eingegeben hat."
+    },
+    {
+      "name": "InstanceID",
+      "type": "number",
+      "doc": "ID der Instanz der Beurteilungsseite, zu der der Eintrag gehört."
     },
     {
       "name": "ReportID",
@@ -228,22 +1362,102 @@
     {
       "name": "Code",
       "type": "string",
-      "doc": "Der Klassifizierungscode (z.B. ICD, OPS)."
+      "doc": "Code wie dokumentiert (einschließlich Seitenlokalisierungen und Add-ons)."
     },
     {
       "name": "CodeText",
       "type": "string",
-      "doc": "Text, der zum Code gehört."
+      "doc": "Text, der zum Code gehört (und eventuell vom Benutzer geändert wurde)."
     },
     {
-      "name": "CodingSystem",
+      "name": "PointOfTime",
+      "type": "datetime",
+      "doc": "Zeitpunkt des Aufwands wie dokumentiert."
+    },
+    {
+      "name": "CareProviderID",
+      "type": "number",
+      "doc": "ID des Leistungserbringers."
+    },
+    {
+      "name": "Foreign",
+      "type": "boolean",
+      "doc": "-1: Element wurde als Fremdaufwand markiert; 0: Aufwand auf der eigenen Station."
+    },
+    {
+      "name": "RecordID",
+      "type": "number",
+      "doc": "Systemweite eindeutige ID des Datensatzes (Code)."
+    },
+    {
+      "name": "MainDiagnosis",
+      "type": "boolean",
+      "doc": "-1: Eintrag ist die Hauptdiagnose; 0: Eintrag ist nicht die Hauptdiagnose."
+    },
+    {
+      "name": "Imported",
+      "type": "boolean",
+      "doc": "-1: Element wurde aus dem KIS importiert; 0: auf eigener Station codiert."
+    },
+    {
+      "name": "AutoCoded",
+      "type": "boolean",
+      "doc": "-1: Element wurde automatisch basierend auf Daten aus Tageskurve codiert; 0: manuell codiert."
+    },
+    {
+      "name": "CodeCount",
+      "type": "number",
+      "doc": "Nur LEP: wie oft dieser Code ausgelöst wurde; 1 für andere Systeme."
+    },
+    {
+      "name": "Priority",
+      "type": "number",
+      "doc": "Prioritätswert des Elements (Index der Zeile in den Listenfeldern)."
+    },
+    {
+      "name": "Effort",
+      "type": "number",
+      "doc": "Nur LEP: Aufwand für den Datensatz [min]; NULL für andere Codiersysteme."
+    },
+    {
+      "name": "SeverityCode",
       "type": "string",
-      "doc": "ID des verwendeten Codiersystems."
+      "doc": "AVB: Code für den Schweregrad; NULL für andere Codiersysteme."
+    },
+    {
+      "name": "POTCode",
+      "type": "string",
+      "doc": "AVB: Code für den Zeitpunkt; NULL für andere Codiersysteme."
+    },
+    {
+      "name": "Export",
+      "type": "boolean",
+      "doc": "-1: Element wurde für Export markiert; 0: nicht für Export markiert."
+    },
+    {
+      "name": "PrimaryCode",
+      "type": "string",
+      "doc": "Sekundäre Diagnosen: Code der zugehörigen Hauptdiagnose; NULL für nicht-sekundäre Diagnosen."
     },
     {
       "name": "Date",
-      "type": "date",
+      "type": "datetime",
       "doc": "Zeitpunkt des Reports, zu dem der Eintrag gehört."
+    },
+    {
+      "name": "CostCenter",
+      "type": "string",
+      "doc": "Name der Kostenstelle, die mit dem Code verknüpft ist (Diagnosen)."
+    },
+    {
+      "name": "CareOU",
+      "type": "string",
+      "doc": "Name der pflegerischen Organisationseinheit, die mit dem Code verknüpft ist (Prozeduren)."
+    },
+    {
+      "name": "SortCrossStar",
+      "type": "string",
+      "doc": "Sortierschlüssel, um Kreuz-Stern-Diagnosen korrekt hintereinander zu sortieren."
     },
     {
       "name": "Notion",
@@ -253,7 +1467,27 @@
     {
       "name": "DisplayName",
       "type": "string",
-      "doc": "Anzeigename des Begriffs."
+      "doc": "(Benutzerfreundlicher) Anzeigename des Begriffs."
+    },
+    {
+      "name": "ItemSelectionID",
+      "type": "number",
+      "doc": "Binäre Kombination der IDs der Elemente, die im Eingabedialog des Begriffs ausgewählt wurden."
+    },
+    {
+      "name": "ItemText",
+      "type": "string",
+      "doc": "Text, der aus den ausgewählten Elementen zusammengestellt ist, durch Kommata getrennt."
+    },
+    {
+      "name": "ItemID",
+      "type": "number",
+      "doc": "ID des aktuellen Begriffseintrags (Index im Eingabedialog) (nur mit Items=All)."
+    },
+    {
+      "name": "ItemName",
+      "type": "string",
+      "doc": "Bezeichnung des aktuellen Begriffseintrags (nur mit Items=All)."
     },
     {
       "name": "FreeText",
@@ -261,14 +1495,540 @@
       "doc": "Freitext, der im Eingabedialog des Begriffs eingegeben wurde."
     },
     {
-      "name": "Findings",
-      "type": "string",
-      "doc": "Freitext, der in ein Befund-Textfeld eingegeben wurde."
+      "name": "RegisterPage",
+      "type": "number",
+      "doc": "Index der Registerseite, auf der der Begriff erscheint."
     },
     {
-      "name": "InstanceID",
+      "name": "Headline",
+      "type": "string",
+      "doc": "Bezeichnung der Registerseite, auf der der Begriff erscheint."
+    },
+    {
+      "name": "RegisterPageSequence",
       "type": "number",
-      "doc": "ID der Instanz eines Reports. "
+      "doc": "Sortierschlüssel der Position der Registerseite."
+    },
+    {
+      "name": "NotionSequence",
+      "type": "number",
+      "doc": "Sortierschlüssel des Begriffs auf der Registerseite."
+    },
+    {
+      "name": "FreeTextLabel",
+      "type": "string",
+      "doc": "Beschriftung des Freitext-Feldes."
+    },
+    {
+      "name": "UnValidated",
+      "type": "boolean",
+      "doc": "Gibt an, ob Daten eines auf 'immer sichtbar' eingestellten Begriffs in der aktuellen Episode schon bestätigt (0) oder nicht (-1) wurden."
+    },
+    {
+      "name": "ParentNotion",
+      "type": "string",
+      "doc": "Name des übergeordneten Begriffs."
+    },
+    {
+      "name": "ParentNotionSequence",
+      "type": "number",
+      "doc": "Sortierschlüssel des übergeordneten Begriffs."
+    },
+    {
+      "name": "RootNotionEntry",
+      "type": "string",
+      "doc": "Bei Liquid Notions: Bezeichnung des obersten übergeordneten Begriffs."
+    },
+    {
+      "name": "IsLiquidNotion",
+      "type": "boolean",
+      "doc": "-1: Datensatz gehört zu einem Liquid Notion; 0: Datensatz gehört zu einem normalen Begriff."
+    },
+    {
+      "name": "ChangeDate",
+      "type": "datetime",
+      "doc": "Gibt den Zeitpunkt der letzten Änderung an."
+    },
+    {
+      "name": "AllergyID",
+      "type": "number",
+      "doc": "ID des Allergie-Eintrags (eindeutig innerhalb des Falls)."
+    },
+    {
+      "name": "AllergenName",
+      "type": "string",
+      "doc": "Bezeichnung der Allergie."
+    },
+    {
+      "name": "TypeID",
+      "type": "number",
+      "doc": "ID des Allergie-Typs."
+    },
+    {
+      "name": "TypeCode",
+      "type": "string",
+      "doc": "Code des Allergie-Typs."
+    },
+    {
+      "name": "TypeCodingSystem",
+      "type": "string",
+      "doc": "Codiersystem des Codes dieses Allergie-Typs."
+    },
+    {
+      "name": "TypeName",
+      "type": "string",
+      "doc": "Bezeichnung des Allergie-Typs."
+    },
+    {
+      "name": "TypeDescription",
+      "type": "string",
+      "doc": "Beschreibung des Allergie-Typs."
+    },
+    {
+      "name": "TypeFhirCategory",
+      "type": "string",
+      "doc": "Kategorisierung des Allergie-Typs im Bezug auf FHIR."
+    },
+    {
+      "name": "NameID",
+      "type": "number",
+      "doc": "ID der Allergie."
+    },
+    {
+      "name": "NameCode",
+      "type": "string",
+      "doc": "Code der Allergie."
+    },
+    {
+      "name": "NameCodingSystem",
+      "type": "string",
+      "doc": "Codiersystem des Codes dieses Allergie-Namens."
+    },
+    {
+      "name": "NameName",
+      "type": "string",
+      "doc": "Bezeichnung der Allergie."
+    },
+    {
+      "name": "NameDescription",
+      "type": "string",
+      "doc": "Beschreibung der Allergie."
+    },
+    {
+      "name": "SeverityID",
+      "type": "number",
+      "doc": "ID des Schweregrads."
+    },
+    {
+      "name": "SeverityCodingSystem",
+      "type": "string",
+      "doc": "Codiersystem des Codes dieses Schweregrads."
+    },
+    {
+      "name": "SeverityName",
+      "type": "string",
+      "doc": "Bezeichnung des Schweregrads."
+    },
+    {
+      "name": "SeveritySortKey",
+      "type": "string",
+      "doc": "Sortierschlüssel des Schweregrads."
+    },
+    {
+      "name": "SeverityDescription",
+      "type": "string",
+      "doc": "Beschreibung des Schweregrads."
+    },
+    {
+      "name": "Remark",
+      "type": "string",
+      "doc": "Dokumentierte Bemerkung."
+    },
+    {
+      "name": "Reaction",
+      "type": "string",
+      "doc": "Dokumentierte Reaktion."
+    },
+    {
+      "name": "IdentificationDate",
+      "type": "datetime",
+      "doc": "Datum der Dokumentation."
+    },
+    {
+      "name": "IdentificationUser",
+      "type": "number",
+      "doc": "ID des Benutzers, der den Eintrag dokumentiert hat."
+    },
+    {
+      "name": "ReactionID",
+      "type": "number",
+      "doc": "ID der Reaktion (Freitext: -2, Unbekannt: -1)."
+    },
+    {
+      "name": "ReactionTextValue",
+      "type": "string",
+      "doc": "Textueller Wert der Reaktion."
+    },
+    {
+      "name": "ReactionCode",
+      "type": "string",
+      "doc": "Code der Reaktion."
+    },
+    {
+      "name": "ReactionCodingSystem",
+      "type": "string",
+      "doc": "Codiersystem des Codes dieser Reaktion."
+    },
+    {
+      "name": "Count",
+      "type": "number",
+      "doc": "Stellt die Anzahl der auszugebenden Datensätze ein."
+    },
+    {
+      "name": "Period",
+      "type": "string",
+      "doc": "Stellt den gewünschten Abstand zwischen den Zeitstempeln der virtuellen Datensätze ein."
+    },
+    {
+      "name": "Time",
+      "type": "datetime",
+      "doc": "Stellt den Zeitstempel des ersten virtuellen Datensatzes in Bezug auf den Beginn des mit dem Parameter 'Range' angegebenen Bereichs ein."
+    },
+    {
+      "name": "From",
+      "type": "datetime",
+      "doc": "Beginn des verarbeiteten Zeitbereichs (vom Parameter 'Range' festgelegt)."
+    },
+    {
+      "name": "Until",
+      "type": "datetime",
+      "doc": "Ende des verarbeiteten Zeitbereichs (vom Parameter 'Range' festgelegt)."
+    },
+    {
+      "name": "SumEffort",
+      "type": "number",
+      "doc": "Summe des Aufwands [min] für alle Datensätze innerhalb des Zeitbereichs."
+    },
+    {
+      "name": "HIS_CaseID",
+      "type": "string",
+      "doc": "KIS-Fall-ID (Aufnahmenummer)."
+    },
+    {
+      "name": "Text",
+      "type": "string",
+      "doc": "Text, der zum Code passt (gemäß dem Katalog)."
+    },
+    {
+      "name": "Description",
+      "type": "string",
+      "doc": "Text, der vom Benutzer bearbeitet bzw. eingegeben wurde (falls vorhanden)."
+    },
+    {
+      "name": "TypeID",
+      "type": "number",
+      "doc": "ID des Diagnosetyps."
+    },
+    {
+      "name": "Type",
+      "type": "string",
+      "doc": "Textuelle Beschreibung des Typs."
+    },
+    {
+      "name": "WardID",
+      "type": "string",
+      "doc": "Kurze textuelle Bezeichnung der Station, in der der Datensatz codiert wurde."
+    },
+    {
+      "name": "WardName",
+      "type": "string",
+      "doc": "Langer Name der Station, in der der Datensatz codiert wurde."
+    },
+    {
+      "name": "DepartmentID",
+      "type": "string",
+      "doc": "Kurze textuelle Bezeichnung der Abteilung, in der der Datensatz codiert wurde."
+    },
+    {
+      "name": "DepartmentName",
+      "type": "string",
+      "doc": "Langer Name der Abteilung, in der der Datensatz codiert wurde."
+    },
+    {
+      "name": "LocationID",
+      "type": "number",
+      "doc": "ID der Lokalisierung."
+    },
+    {
+      "name": "Location",
+      "type": "string",
+      "doc": "Name der Lokalisierung."
+    },
+    {
+      "name": "PriorityID",
+      "type": "number",
+      "doc": "ID der Priorität."
+    },
+    {
+      "name": "AdditionID",
+      "type": "number",
+      "doc": "ID der Addition."
+    },
+    {
+      "name": "AdditionText",
+      "type": "string",
+      "doc": "Name der Addition."
+    },
+    {
+      "name": "StartDateTime",
+      "type": "datetime",
+      "doc": "Zeitpunkt, zu dem der Patient in das Bett transferiert wurde."
+    },
+    {
+      "name": "StartTime",
+      "type": "string",
+      "doc": "Wie StartDateTime, aber nur als 'hh:nn' formatiert."
+    },
+    {
+      "name": "Bed",
+      "type": "string",
+      "doc": "Name (Positionsbezeichner) des Betts."
+    },
+    {
+      "name": "EndDateTime",
+      "type": "datetime",
+      "doc": "Zeitpunkt, zu dem der Patient in ein anderes Bett transferiert wurde (NULL, wenn noch nicht transferiert)."
+    },
+    {
+      "name": "EndTime",
+      "type": "string",
+      "doc": "Wie EndDateTime, aber nur als 'hh:nn' formatiert."
+    },
+    {
+      "name": "ScoreSum",
+      "type": "number",
+      "doc": "Summe der Ergebnispunkte."
+    },
+    {
+      "name": "ScoreDisplay",
+      "type": "string",
+      "doc": "Name des Begriffs auf der Beurteilungsseite, der die Anzeige des Score-Ergebnisses handhabt. Muss als Filterkriterium angegeben werden."
+    },
+    {
+      "name": "PreOP_Status",
+      "type": "number",
+      "doc": "Von ICM intern vergebener Status der PräOP-Visite: 0=unbestimmt, 1=anstehend, 2=in Bearbeitung, 3=abgeschlossen, 4=storniert."
+    }
+  ],
+  "functions": [
+    {
+      "name": "In",
+      "signature": "In(x:number)",
+      "doc": "Natürlicher Logarithmus von x.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "Id",
+      "signature": "Id(x:number)",
+      "doc": "Zweierlogarithmus von x.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "Ig",
+      "signature": "Ig(x:number)",
+      "doc": "Logarithmus von x zur Basis 10.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "e",
+      "signature": "e(x:number)",
+      "doc": "Exponentialfunktion (e zur x-ten Potenz).",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "W",
+      "signature": "W(x:number)",
+      "doc": "Quadratwurzel von x.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "Abs",
+      "signature": "Abs(x:number)",
+      "doc": "Absolutwert von x.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "Fix",
+      "signature": "Fix(x:number)",
+      "doc": "Unterdrückung der Dezimalstellen von x.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "Int",
+      "signature": "Int(x:number)",
+      "doc": "Abrundung von x.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "Sgn",
+      "signature": "Sgn(x:number)",
+      "doc": "Vorzeichen von x.",
+      "args": [
+        "x"
+      ]
+    },
+    {
+      "name": "Rnd",
+      "signature": "Rnd()",
+      "doc": "Zufallszahl zwischen 0 und 1.",
+      "args": []
+    },
+    {
+      "name": "pi",
+      "signature": "pi()",
+      "doc": "Konstante Pi.",
+      "args": []
+    },
+    {
+      "name": "Count",
+      "signature": "Count(x1:number, x2:number, ..., xN:number)",
+      "doc": "Anzahl der Argumente.",
+      "args": [
+        "x1",
+        "x2",
+        "xN"
+      ]
+    },
+    {
+      "name": "Sum",
+      "signature": "Sum(x1:number, x2:number, ..., xN:number)",
+      "doc": "Summe der Argumente.",
+      "args": [
+        "x1",
+        "x2",
+        "xN"
+      ]
+    },
+    {
+      "name": "Min",
+      "signature": "Min(x1:number, x2:number, ..., xN:number)",
+      "doc": "Mindestwert der Argumente.",
+      "args": [
+        "x1",
+        "x2",
+        "xN"
+      ]
+    },
+    {
+      "name": "Max",
+      "signature": "Max(x1:number, x2:number, ..., xN:number)",
+      "doc": "Höchstwert der Argumente.",
+      "args": [
+        "x1",
+        "x2",
+        "xN"
+      ]
+    },
+    {
+      "name": "Avg",
+      "signature": "Avg(x1:number, x2:number, ..., xN:number)",
+      "doc": "Durchschnittswert der Argumente.",
+      "args": [
+        "x1",
+        "x2",
+        "xN"
+      ]
+    },
+    {
+      "name": "DecodeEq",
+      "signature": "DecodeEq(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
+      "doc": "Gibt das erste yi zurück, bei dem x=xi gilt. Sonst wird der Standardwert z zurückgegeben.",
+      "args": [
+        "x",
+        "x1",
+        "y1",
+        "xN",
+        "yN",
+        "z"
+      ]
+    },
+    {
+      "name": "DecodeLs",
+      "signature": "DecodeLs(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
+      "doc": "Gibt das erste yi zurück, bei dem x<xi gilt. Sonst wird der Standardwert z zurückgegeben.",
+      "args": [
+        "x",
+        "x1",
+        "y1",
+        "xN",
+        "yN",
+        "z"
+      ]
+    },
+    {
+      "name": "DecodeGr",
+      "signature": "DecodeGr(x:number, x1:number, y1:number, ..., xN:number, yN:number, z:number)",
+      "doc": "Gibt das erste yi zurück, bei dem x>xi gilt. Sonst wird der Standardwert z zurückgegeben.",
+      "args": [
+        "x",
+        "x1",
+        "y1",
+        "xN",
+        "yN",
+        "z"
+      ]
+    },
+    {
+      "name": "Round",
+      "signature": "Round(x:number, n:number)",
+      "doc": "Rundung von x auf n Dezimalstellen.",
+      "args": [
+        "x",
+        "n"
+      ]
+    },
+    {
+      "name": "Greater",
+      "signature": "Greater(x:number, y:number)",
+      "doc": "Ergibt 1 wenn x > y, sonst 0.",
+      "args": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "Less",
+      "signature": "Less(x:number, y:number)",
+      "doc": "Ergibt 1 wenn x < y, sonst 0.",
+      "args": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "Equal",
+      "signature": "Equal(x:number, y:number)",
+      "doc": "Ergibt 1 wenn x = y, sonst 0.",
+      "args": [
+        "x",
+        "y"
+      ]
     }
   ],
   "enums": {
@@ -285,14 +2045,14 @@
       "First+Last",
       "Distinct",
       "Open",
-      "Assigned PreOP"
+      "AssignedPreOP"
     ],
     "WorkFlowStatusOptions": [
       "All",
       "Planned",
       "Confirmed",
       "Overdue",
-      "NotAdminstered"
+      "NotAdministered"
     ],
     "OrderSelectionOptions": [
       "All",
@@ -316,6 +2076,400 @@
       "PreOPFinalizationExecuted"
     ]
   },
+  "static_macros": [
+    {
+      "name": "True",
+      "doc": "Boolescher Wert TRUE, der für den aktuellen Datenbanktyp geeignet ist."
+    },
+    {
+      "name": "False",
+      "doc": "Boolescher Wert FALSE, der für den aktuellen Datenbanktyp geeignet ist."
+    },
+    {
+      "name": "PPatientStayReferences",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PDemographics",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PTransfers",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PClassifications",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PMassnahmen",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PMixtureTargets",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PMixtures",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PMixtureIngredients",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PReportItems",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PPictures",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "POrdersFindings",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "POrdersAntibiograms",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "CScoreRawData",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PAllergies",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "PPreOP",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "CClappStatus",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "CClappData",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "LaborMDB",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "CJobControls",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "CJobHosts",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "CJobControlExecution",
+      "doc": "Fügt den Namen und Pfad zur entsprechenden Falldatentabelle ein."
+    },
+    {
+      "name": "SiteDBPath",
+      "doc": "Vollständiger Pfad zum zentralen Database-Verzeichnis des Standorts."
+    },
+    {
+      "name": "DBPath",
+      "doc": "Vollständiger Pfad zum zentralen Database-Verzeichnis der Station."
+    },
+    {
+      "name": "IniPathRemote",
+      "doc": "Vollständiger Pfad zum zentralen Inifiles-Verzeichnis."
+    },
+    {
+      "name": "WardName",
+      "doc": "Name der Station."
+    },
+    {
+      "name": "WardID",
+      "doc": "ID der Station."
+    },
+    {
+      "name": "LocalWardID",
+      "doc": "ID der Station (alter Makro-Name)."
+    },
+    {
+      "name": "IniPathLocal",
+      "doc": "Vollständiger Pfad zur lokalen Kopie des Inifiles-Verzeichnis der Station."
+    },
+    {
+      "name": "ClientIniPath",
+      "doc": "Vollständiger Pfad zu den speziellen Ini-Dateien des Client (icm.ini usw.)."
+    },
+    {
+      "name": "ClientResourcePath",
+      "doc": "Vollständiger Pfad zum Zwischenspeicher-Ordner des Client."
+    },
+    {
+      "name": "ICMPath",
+      "doc": "Vollständiger Pfad zum ICM-Installationsordner."
+    },
+    {
+      "name": "WorkstationName",
+      "doc": "Name des lokalen Arbeitsplatzes."
+    },
+    {
+      "name": "WorkstationID",
+      "doc": "ID des lokalen Arbeitsplatzes (eindeutige ID pro Station)."
+    },
+    {
+      "name": "WorkstationWardID",
+      "doc": "ID der Station, zu der der lokale Arbeitsplatz gehört."
+    },
+    {
+      "name": "CurrentCaseID",
+      "doc": "ID des Falls."
+    },
+    {
+      "name": "CurrentCaseMDSIID",
+      "doc": "MDSI-ID des Falls."
+    },
+    {
+      "name": "CurrentHISCaseID",
+      "doc": "KIS-Fall-ID (Aufnahmenummer)."
+    },
+    {
+      "name": "CurrentHISPatientID",
+      "doc": "KIS-Patienten-ID."
+    },
+    {
+      "name": "CurrentCaseWardID",
+      "doc": "ID der Station, die für den Fall zuständig ist."
+    },
+    {
+      "name": "CurrentUserID",
+      "doc": "ID des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUser",
+      "doc": "Vollständiger Name des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserTitle",
+      "doc": "Titel des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserLastName",
+      "doc": "Nachname des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserFirstName",
+      "doc": "Vorname des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserLoginName",
+      "doc": "Anmeldename des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserExtName",
+      "doc": "Externer Name des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserExtPassword",
+      "doc": "Externes Kennwort des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserCostCenter",
+      "doc": "Kostenstelle ('Fachabteilung') des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserCareOU",
+      "doc": "Pflege-Organisationseinheit ('Station') des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentUserRole",
+      "doc": "Rolle des Benutzers, der gegenwärtig in ICM angemeldet ist."
+    },
+    {
+      "name": "CurrentTime",
+      "doc": "Aktuelle Systemzeit."
+    },
+    {
+      "name": "CurrentTimeNum",
+      "doc": "Aktuelle Systemzeit ohne Trennzeichen (ausschließlich Ziffern)."
+    },
+    {
+      "name": "CurrentMinutesOfDay",
+      "doc": "Laufende Minute des Tages (Systemzeit)."
+    },
+    {
+      "name": "MedCareInstanceID",
+      "doc": "ID der aktiven Instanz der Beurteilungsseite."
+    },
+    {
+      "name": "MedCareRegisterTabIndex",
+      "doc": "Index des aktiven Reiters der Beurteilungsseite."
+    },
+    {
+      "name": "MedCareReportID",
+      "doc": "ID des geöffneten Reports der Beurteilungsseite."
+    },
+    {
+      "name": "MedCareSurgeryID",
+      "doc": "ID der geplanten OP, die zum geöffneten Report der Beurteilungsseite gehört."
+    },
+    {
+      "name": "MedCareSurgeryOPID",
+      "doc": "Vom KIS vergebene ID der geplanten OP."
+    },
+    {
+      "name": "MedCareSurgeryDescription",
+      "doc": "Beschreibung der geplanten OP."
+    },
+    {
+      "name": "MedCareSurgeryPlanned",
+      "doc": "Datum und Zeit der geplanten OP."
+    },
+    {
+      "name": "MixtureIDsBeingReleased",
+      "doc": "Komma-getrennte Liste der MixtureID von Ernährungsverordnungen, die derzeit freigegeben werden."
+    },
+    {
+      "name": "DateFrom",
+      "doc": "Beginn des Zeitbereichs, der durch den Parameter Range des KeyStrings festgelegt ist."
+    },
+    {
+      "name": "DateUntil",
+      "doc": "Ende des Zeitbereichs, der durch den Parameter Range des KeyStrings festgelegt ist."
+    },
+    {
+      "name": "PatientsGender",
+      "doc": "Geschlecht (0=männlich, 1=weiblich, 2=unbekannt, 9=divers)."
+    },
+    {
+      "name": "PatientsAge",
+      "doc": "Formatiertes Alter des Patienten."
+    },
+    {
+      "name": "PatientsAgeDays",
+      "doc": "Alter des Patienten in ganzen Tagen."
+    },
+    {
+      "name": "PatientsAgeYears",
+      "doc": "Alter des Patienten in ganzen Jahren."
+    },
+    {
+      "name": "PatientsDayOfStay",
+      "doc": "Anzahl der Tage seit Aufnahme des aktuellen Falls."
+    },
+    {
+      "name": "PatientsLengthOfStayMinutes",
+      "doc": "Anzahl der Minuten seit Aufnahme des aktuellen Falls."
+    },
+    {
+      "name": "PatientsADMHeight",
+      "doc": "Aufnahmegröße des Patienten [cm]."
+    },
+    {
+      "name": "PatientsBirthHeight",
+      "doc": "Geburtsgröße des Patienten [cm]."
+    },
+    {
+      "name": "PatientsHeight",
+      "doc": "Aktuelle Größe des Patienten [cm], wie in der Kurve dokumentiert."
+    },
+    {
+      "name": "PatientsADMWeight",
+      "doc": "Aufnahmegewicht des Patienten [kg]."
+    },
+    {
+      "name": "PatientsBirthWeight",
+      "doc": "Geburtsgewicht des Patienten [kg]."
+    },
+    {
+      "name": "PatientsWeight",
+      "doc": "Aktuelles Gewicht des Patienten [kg], wie in der Kurve dokumentiert."
+    },
+    {
+      "name": "PatientsADMHeadCF",
+      "doc": "Aufnahmekopfumfang des Patienten [cm]."
+    },
+    {
+      "name": "PatientsBirthHeadCF",
+      "doc": "Geburtskopfumfang des Patienten [cm]."
+    },
+    {
+      "name": "PatientsHeadCF",
+      "doc": "Aktueller Kopfumfang des Patienten [cm], wie in der Kurve dokumentiert."
+    },
+    {
+      "name": "PatientsADMBSA",
+      "doc": "Aufnahmekörperoberfläche des Patienten [m2]."
+    },
+    {
+      "name": "PatientsBirthBSA",
+      "doc": "Geburtskörperoberfläche des Patienten [m2]."
+    },
+    {
+      "name": "PatientsBSA",
+      "doc": "Aktuelle Körperoberfläche des Patienten [m²]."
+    },
+    {
+      "name": "PatientsADMBMI",
+      "doc": "Aufnahme-Body Mass Index [kg/m²]."
+    },
+    {
+      "name": "PatientsBirthBMI",
+      "doc": "Geburts-Body Mass Index [kg/m2]."
+    },
+    {
+      "name": "PatientsBMI",
+      "doc": "Aktueller Body Mass Index [kg/m²]."
+    },
+    {
+      "name": "PatientsGestationalAgeDays",
+      "doc": "Gestationsalter des Patienten in Tagen."
+    },
+    {
+      "name": "PatientsGestationalAgeDaysAtBirth",
+      "doc": "Gestationsalter des Patienten in Tagen zum Zeitpunkt der Geburt."
+    },
+    {
+      "name": "PatientsCurrentPercentile",
+      "doc": "Derzeit für den Fall ausgewählter Perzentilen-Datensatz."
+    },
+    {
+      "name": "BirthPercentileWeight",
+      "doc": "Prozentwert des Gewichtsperzentils [%] zum Zeitpunkt der Geburt."
+    },
+    {
+      "name": "BirthPercentileLength",
+      "doc": "Prozentwert des Körperlängenperzentils [%] zum Zeitpunkt der Geburt."
+    },
+    {
+      "name": "BirthPercentileHeadCF",
+      "doc": "Prozentwert des Kopfumfangsperzentils [%] zum Zeitpunkt der Geburt."
+    },
+    {
+      "name": "BirthPercentileBMI",
+      "doc": "Prozentwert des BMI-Perzentils [%] zum Zeitpunkt der Geburt."
+    },
+    {
+      "name": "ADMPercentileWeight",
+      "doc": "Prozentwert des Gewichtsperzentils [%] zum Zeitpunkt der Aufnahme."
+    },
+    {
+      "name": "ADMPercentileLength",
+      "doc": "Prozentwert des Körperlängenperzentils [%] zum Zeitpunkt der Aufnahme."
+    },
+    {
+      "name": "ADMPercentileHeadCF",
+      "doc": "Prozentwert des Kopfumfangsperzentils [%] zum Zeitpunkt der Aufnahme."
+    },
+    {
+      "name": "ADMPercentileBMI",
+      "doc": "Prozentwert des BMI-Perzentils [%] zum Zeitpunkt der Aufnahme."
+    },
+    {
+      "name": "AdmissionDateHospital",
+      "doc": "Datum der Krankenhausaufnahme."
+    }
+  ],
   "examples": [
     "[Orders: TreatmentName=Alupent*; Format=!({Begin} : {CT_Dose}\\CR)]",
     "[Codes: Range=All; Records=Last; CodingSystem=2;InstanceID=5; Export={True};Format=!({Code}|{CodeText}|{MainDiagnosis}^{ReportID}^{Priority}^{Imported}^{RecordID}^{InstanceID}^{CodingSystemVersion}^{Foreign}^{AutoCoded}^{CareProvider ID}^{UserID}^{PrimaryCode}^{Export}^{CostCenter}^ {PointOfTime}|{CareProviderl D}|220\\CR)]",

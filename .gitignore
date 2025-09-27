@@ -12,6 +12,9 @@ dist/
 # Gepackte Extension-Datei
 *.vsix
 
+# PDF-Dateien
+*.pdf
+
 # VS Code Editor & Workspace-Dateien
 # Ignoriert benutzerspezifische Einstellungen, behält aber die Projektkonfiguration.
 .vscode/*
