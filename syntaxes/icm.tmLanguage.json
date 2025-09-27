@@ -5,7 +5,8 @@
     { "include": "#strings" },
     { "include": "#ini-sections" },
     { "include": "#keystring-blocks" },
-    { "include": "#numbers" }
+    { "include": "#numbers" },
+    { "include": "#format-macros" }
   ],
   "repository": {
     "comments": {
@@ -49,48 +50,44 @@
           "1": { "name": "punctuation.definition.block.end.icm" }
         },
         "patterns": [
-          { "include": "#strings" },
-          { "include": "#keystring-parameters" },
-          { "include": "#format-string-content" }
+          { "include": "#format-parameter-block" },
+          { "include": "#other-parameters" },
+          { "include": "#strings" }
         ]
       }]
     },
-    "keystring-parameters": {
+    "format-parameter-block": {
+      "begin": "\\b(Format)\\s*(=)\\s*(!?)(\\(|\\{)",
+      "beginCaptures": {
+        "1": { "name": "variable.parameter.icm" },
+        "2": { "name": "keyword.operator.assignment.icm" },
+        "3": { "name": "keyword.operator.icm" },
+        "4": { "name": "punctuation.definition.format.begin.icm" }
+      },
+      "end": "(\\)|\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.format.end.icm" }
+      },
+      "name": "meta.format-string.icm",
       "patterns": [
-        {
-          "name": "variable.parameter.icm",
-          "match": "\\b(Range|Records|Sort|Format|Admins|Boxes|WorkFlowStatus|OrderSelection|ContentType|CodingSystem|Items|InstanceID|TreatmentName|Notion|Export|Property|Type|Template|Target|Schedule|CaseLoop)\\b(?==)"
-        },
-        { "include": "#format-string-content" }
+        { "include": "#format-macros" },
+        { "include": "#macros" },
+        { "include": "#functions" }
       ]
     },
-    "format-string-content": {
-      "patterns": [
-        {
-          "name": "meta.format-string.icm",
-          "begin": "(Format\\s*=\\s*!?)(\\(|\\{)",
-          "end": "(\\)|\\})",
-          "beginCaptures": {
-            "1": { "name": "keyword.other.format-specifier.icm" },
-            "2": { "name": "punctuation.definition.format.begin.icm" }
-          },
-          "endCaptures": {
-            "1": { "name": "punctuation.definition.format.end.icm" }
-          },
-          "patterns": [
-            { "include": "#format-macros" },
-            { "include": "#macros" },
-            { "include": "#functions" }
-          ]
-        }
-      ]
+    "other-parameters": {
+        "patterns": [
+            {
+              "name": "variable.parameter.icm",
+              "match": "\\b(Range|Records|Sort|Admins|Boxes|WorkFlowStatus|OrderSelection|ContentType|CodingSystem|Items|InstanceID|TreatmentName|Notion|Export|Property|Type|Template|Target|Schedule|CaseLoop)\\b(?==)"
+            }
+        ]
     },
     "format-macros": {
       "patterns": [
-        {
-          "name": "constant.character.escape.icm",
-          "match": "(\\\\[CR|LF|TAB|BKSP]+|\\\\#[bku])"
-        }
+        { "name": "constant.character.escape.icm", "match": "\\\\(CR|LF|TAB|BKSP)" },
+        { "name": "constant.character.escape.icm", "match": "\\\\fs\\d+" },
+        { "name": "constant.character.escape.icm", "match": "\\\\#\\w+" }
       ]
     },
     "macros": {
