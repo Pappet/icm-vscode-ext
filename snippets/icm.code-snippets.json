@@ -1,31 +1,38 @@
 {
-  "Abfrage der Tageskurve (Orders)": {
+  "Abfrage Tageskurve (Orders)": {
     "prefix": "icmOrders",
     "body": [
-      "[Orders: TreatmentName='${1:*}'; Range=${2:All}; Format=!({Begin}, {TreatmentName}, {Macro}\\CR)]"
+      "[Orders: TreatmentName='${1:*}'; Range=${2|All,Past,Context,Future,ADM...NOW|}; Format=!({Begin}, {TreatmentName}, {Macro}\\CR)]"
     ],
     "description": "Erstellt eine Basisabfrage für Daten aus der Tageskurve (Keyword: Orders)."
   },
-  "Abfrage von Beurteilungsseiten (Reports)": {
+  "Abfrage Beurteilungsseiten (Reports)": {
     "prefix": "icmReports",
     "body": [
-      "[Reports: Notion='${1:SAPS-Score}'; InstanceID=${2:2}; Records=${3:Last}; Format=!({Date}: {ItemText} {FreeText}\\CR)]"
+      "[Reports: Notion='${1:SAPS-Score}'; InstanceID=${2:1}; Records=${3|Last,First,All|}; Format=!({Date}: {ItemText} {FreeText}\\CR)]"
     ],
     "description": "Erstellt eine Basisabfrage für Daten aus den Beurteilungsseiten (Keyword: Reports)."
   },
-  "Abfrage von Diagnosen/Prozeduren (Codes)": {
+  "Abfrage Diagnosen/Prozeduren (Codes)": {
     "prefix": "icmCodes",
     "body": [
-      "[Codes: CodingSystem=${1:ICD10}; Range=${2:All}; Format=!({Date}: {Code} {CodeText}\\CR)]"
+      "[Codes: CodingSystem=${1|ICD10,ICPM,LEP|}; Range=${2:All}; Format=!({Date}: {Code} {CodeText}\\CR)]"
     ],
     "description": "Erstellt eine Basisabfrage für kodierte Diagnosen oder Prozeduren (Keyword: Codes)."
   },
-  "Abfrage von Patientendaten (Pat)": {
+  "Abfrage Patientendaten (Pat)": {
     "prefix": "icmPat",
     "body": [
-      "[Pat:Property=${1:Nachname},${2:Vorname}; Format=std_Patient]"
+      "[Pat: Property=${1:Nachname},${2:Vorname},${3:Geburtstagsdatum}; Format=std_Patient]"
     ],
     "description": "Fragt spezifische demographische Patientendaten ab (Keyword: Pat)."
+  },
+  "Abfrage Systeminformationen (System)": {
+    "prefix": "icmSystem",
+    "body": [
+      "[System: Item={${1|CurrentUser,CurrentTime,WardName,CurrentCaseID|}}]"
+    ],
+    "description": "Fragt Systeminformationen wie den aktuellen Benutzer oder die Stations-ID ab."
   },
   "Formatierungsanweisung mit Gruppierung": {
     "prefix": "icmFormatGroup",
@@ -51,15 +58,29 @@
     ],
     "description": "Erstellt die Grundstruktur für eine ICM Export Job-Steuerdatei (.jcf)."
   },
-  "Definition Abgeleiteter Parameter (Formel)": {
-    "prefix": "icmDpFormula",
+  "Vollständiger Export-Job mit Zeitsteuerung": {
+    "prefix": "icmFullJob",
     "body": [
-      "[${1:MeinIndex}]",
-      "Source==\\$_${2:PaO2}/\\$_${3:FiO2}"
+        "[JobControl]",
+        "Schedule=${1:2025-01-01 08:00}",
+        "Period=${2:1d}",
+        "TimeRange=CTX-24h...CTX",
+        "CaseLoop=Ward",
+        "DisplayErrors=0",
+        "OnFinish=",
+        "",
+        "[JobList]",
+        "ExportTageskurve",
+        "",
+        "[ExportTageskurve]",
+        "Type=TextFile",
+        "Template=Templates\\TageskurvenExport.template",
+        "Target=C:\\Export\\Tageskurve_{CurrentCaseID}_{CurrentTimeNum}.txt",
+        "Append=0"
     ],
-    "description": "Definiert einen abgeleiteten Parameter, der auf einer Formel basiert."
+    "description": "Erstellt einen vollständigen, zeitgesteuerten Export-Job für alle Stationspatienten."
   },
-  "Definition Abgeleiteter Verordnungsparameter": {
+  "Definition Abgeleiteter Verordnungsparameter (DOP)": {
     "prefix": "icmDop",
     "body": [
       "[${1:MeinParameter}]",
@@ -68,5 +89,12 @@
       "Funktion=${3|Last,First,Min,Max,Sum,Avg,Count|}"
     ],
     "description": "Definiert einen abgeleiteten Verordnungsparameter zum Abruf von Werten aus der Tageskurve."
+  },
+    "Abfrage Score-Summe": {
+    "prefix": "icmScoreSum",
+    "body": [
+      "[ScoreSum: ScoreDisplay='${1:Score Display DRG}'; Range=ADM...CTX; Format=!({ScoreSum})]"
+    ],
+    "description": "Berechnet die Summe der Punkte für einen bestimmten Score."
   }
 }
