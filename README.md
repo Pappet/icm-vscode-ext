@@ -99,6 +99,26 @@ Damit die Extension Ihre ICM-Sprache versteht, benötigt sie eine "Wörterbuch-D
 
 ---
 
+## Troubleshooting
+
+**Problem:** Das Schema wird nicht geladen oder die Autovervollständigung funktioniert nicht.
+
+**Lösung:**
+
+1.  **Pfad überprüfen:** Stellen Sie sicher, dass der Pfad zur `dsl_icm.json` in den VSCode-Einstellungen (`icm.schemaPath`) korrekt ist. Der Pfad kann absolut oder relativ zum Workspace-Ordner sein.
+2.  **Schema neu laden:** Führen Sie den Befehl `ICM: Schema neu laden` aus der Befehlspalette (`Ctrl+Shift+P` oder `Cmd+Shift+P`) aus.
+3.  **VSCode neustarten:** Manchmal kann ein Neustart von Visual Studio Code helfen, um die Extension und das Schema neu zu laden.
+
+---
+
+## Konfiguration
+
+Die Extension kann über die VSCode-Einstellungen konfiguriert werden:
+
+* **`icm.schemaPath`**: Optionaler Pfad zur `dsl_icm.json` Schema-Datei. Wenn kein Pfad angegeben ist, wird das mitgelieferte Schema verwendet.
+
+---
+
 ## Projektstruktur
 
 ```

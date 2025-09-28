@@ -4,7 +4,10 @@
     "description": "Syntax, Autocomplete und Hilfen für Dräger ICM Query-DSL.",
     "version": "0.0.5",
     "publisher": "TODO",
-    "repository": "https://github.com/Pappet/icm-vscode-ext.git",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Pappet/icm-vscode-ext.git"
+    },
     "engines": {
         "vscode": "^1.79.2"
     },
