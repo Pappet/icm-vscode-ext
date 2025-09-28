@@ -5,8 +5,8 @@
 ; -------------------------------------------------------
 ; 1. Korrekte Abfragen (sollten KEINE Fehler zeigen)
 ; -------------------------------------------------------
-[Orders: TreatmentName = 'Heparin'; Range = All; Records = Last; Format = !({Begin}: {Macro}\CR)]
-[Codes: CodingSystem = ICD10; Range = All; Format = !({CodeText}\CR)]
+[Orders: TreatmentName='Heparin'; Range=All; Records=Last; Format=!({Begin}: {Macro}\CR)]
+[Codes: CodingSystem=ICD10; Range=All; Format=!({CodeText}\CR)]
 
 
 ; -------------------------------------------------------
@@ -25,7 +25,7 @@ Orders: Format=!({TreatmentName})]
 ; -------------------------------------------------------
 
 ; FEHLER: Unbekanntes Keyword 'Orderrs'
-[Orderrs: Format = !({TreatmentName})]
+[Orderrs: Format=!({TreatmentName})]
 
 
 ; -------------------------------------------------------
@@ -33,13 +33,13 @@ Orders: Format=!({TreatmentName})]
 ; -------------------------------------------------------
 
 ; FEHLER: Unbekanntes Feld 'Reccords'
-[Orders: Reccords = Last; Format = !({Begin})]
+[Orders: Reccords=Last; Format=!({Begin})]
 
 ; FEHLER: Feld 'Admins' ist für das Keyword 'Codes' nicht gültig
-[Codes: Admins = All; Format = !({CodeText})]
+[Codes: Admins=All; Format=!({CodeText})]
 
 ; FEHLER: Doppeltes Feld 'Range'
-[Orders: Range = All; Range = Past; Format = !({Begin})]
+[Orders: Range=All; Range=Past; Format=!({Begin})]
 
 
 ; -------------------------------------------------------
@@ -47,13 +47,13 @@ Orders: Format=!({TreatmentName})]
 ; -------------------------------------------------------
 
 ; FEHLER: Ungültiger Enum-Wert 'Letzte' für das Feld 'Records'
-[Orders: Records = Letzte; Format = !({Begin})]
+[Orders: Records=Letzte; Format=!({Begin})]
 
 ; FEHLER: 'CaseID' erwartet eine Zahl, aber 'abc' wurde angegeben (Typprüfung)
-[Orders: CaseID = abc; Format = !({Begin})]
+[Orders: CaseID=abc; Format=!({Begin})]
 
 ; FEHLER: Ungültiges Format für den Zeitbereich in 'Range'
-[Orders: Range = NOW-1d-bis-morgen; Format = !({Begin})]
+[Orders: Range=NOW-1d-bis-morgen; Format=!({Begin})]
 
 
 ; -------------------------------------------------------
@@ -61,4 +61,4 @@ Orders: Format=!({TreatmentName})]
 ; -------------------------------------------------------
 
 ; WARNUNG: Der empfohlene Parameter 'Format' fehlt für das Keyword 'Codes'
-[Codes: CodingSystem = ICD10]
+[Codes: CodingSystem=ICD10]

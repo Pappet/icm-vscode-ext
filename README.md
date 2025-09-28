@@ -1,15 +1,103 @@
 # ICM DSL Support
 
-Eine VS-Code-Erweiterung für die Dräger ICM Query DSL. Sie bietet Syntax-Highlighting, Autovervollständigung, Hover-Hilfen, Snippets und Diagnosemeldungen, die aus einer konfigurierbaren Schema-Datei gespeist werden.
+Willkommen bei der VS-Code-Erweiterung für die Dräger ICM Query Language! Diese Erweiterung ist Ihr täglicher Begleiter bei der Arbeit mit ICM-Skripten und erleichtert Ihnen das Schreiben, Verstehen und Überprüfen Ihrer Abfragen und Konfigurationsdateien. 🚀
 
-## Features auf einen Blick
+Egal, ob Sie `.txt`-Abfragen, `.jcf`-Exportjobs oder `.template`-Dateien bearbeiten, dieses Tool unterstützt Sie mit nützlichen Helfern direkt in Ihrem Editor.
 
-- **Syntax-Highlighting** für `.icmq`, `.jcf`, `.template` und ähnliche Dateien über eine spezialisierte TextMate-Grammatik.
-- **Autocomplete** für Keywords, Felder, Enum-Werte, Funktionen und bereitgestellte Beispiel-Queries.
-- **Hover-Hinweise** mit Beschreibungen, Pflichtparametern und Enum-Werten direkt aus dem Schema.
-- **Diagnosemeldungen** für Klammerfehler, unbekannte Keywords/Felder, doppelte Felder sowie ungültige Enum-Werte.
-- **Snippets** für häufige Query- und Job-Steuer-Datei-Strukturen.
-- **Command `ICM: Schema neu laden`** um Schema-Änderungen ohne Neustart zu übernehmen.
+---
+
+## Features im Detail
+
+Unsere Extension bringt eine Reihe von intelligenten Funktionen mit, die Ihnen die Arbeit erleichtern.
+
+### 1. Syntaxhervorhebung
+
+Verabschieden Sie sich von eintönigem Text! Die Extension erkennt die ICM-Sprache automatisch in Dateien mit den Endungen `.txt`, `.jcf`, und `.template`. Schlüsselwörter, Parameter, Kommentare und Werte werden farblich hervorgehoben, was die Lesbarkeit Ihrer Skripte enorm verbessert.
+
+* **Keywords** (`Orders`, `Reports`, `Codes`) werden hervorgehoben.
+* **Parameter** (`Format=`, `Range=`) und deren **Werte** (`All`, `CTX-1h...CTX`) sind klar unterscheidbar.
+* **Kommentare**, die mit `;` beginnen, werden ausgegraut, um sie vom aktiven Code abzuheben.
+* **Formatierungs-Blöcke** und **Makros** (`!({Begin})`, `\CR`) erhalten ebenfalls eine eigene Farbgebung.
+
+### 2. Autovervollständigung (IntelliSense)
+
+Während Sie tippen, schlägt Ihnen die Extension passende Begriffe vor. Das spart nicht nur Zeit, sondern hilft auch, Tippfehler zu vermeiden. Die Vorschläge basieren auf einer zentralen Schema-Datei.
+
+* **Keywords**: Tippen Sie `[` und die Extension schlägt Ihnen alle verfügbaren Keywords wie `Orders` oder `Codes` vor.
+* **Parameter/Felder**: Sobald Sie ein Keyword und einen Doppelpunkt `:` geschrieben haben, erhalten Sie eine Liste aller für dieses Keyword gültigen Parameter, z.B. `TreatmentName=` oder `Range=`.
+* **Werte**: Für viele Parameter wie `Records` oder `WorkFlowStatus` werden die erlaubten Werte (`All`, `Last`, `Confirmed`, etc.) direkt zur Auswahl angeboten.
+* **Funktionen**: Mathematische und logische Funktionen (`Sum()`, `Greater()`) werden ebenfalls mit einer kleinen Erklärung und den erwarteten Argumenten vorgeschlagen.
+
+### 3. Hover-Hilfen
+
+Fahren Sie einfach mit der Maus über ein Keyword, einen Parameter oder eine Funktion, um sofort eine kontextbezogene Hilfe zu erhalten.
+
+* **Keyword-Hilfe**: Zeigt eine Beschreibung des Keywords und listet eventuell empfohlene Parameter auf.
+* **Parameter-Hilfe**: Erklärt, was der Parameter bewirkt und welche Werte er erwartet. Bei vordefinierten Werten (Enums) werden diese direkt angezeigt.
+
+### 4. Fehlerprüfung und Diagnose
+
+Die Extension prüft Ihren Code live auf häufige Fehler und unterstreicht problematische Stellen rot. Das hilft, Fehler frühzeitig zu erkennen und zu beheben.
+
+* **Klammer-Prüfung**: Findet fehlende oder überzählige `[` `]` Klammern.
+* **Keyword-Validierung**: Warnt Sie, wenn ein unbekanntes Keyword verwendet wird.
+* **Parameter-Validierung**: Meldet unbekannte oder für das Keyword ungültige Parameter.
+* **Werte-Validierung**: Prüft, ob der Wert eines Parameters gültig ist.
+* **Empfehlungen**: Gibt eine Warnung aus, wenn ein für ein Keyword dringend empfohlener Parameter (wie `Format`) fehlt.
+
+### 5. Code-Formatierung
+
+Mit einem Klick (normalerweise über `Shift+Alt+F`) können Sie Ihr gesamtes Dokument automatisch formatieren lassen. Das sorgt für ein einheitliches und sauberes Erscheinungsbild Ihrer Skripte. Die Formatierung wendet dabei folgende Regeln an:
+
+* **Leerzeichen um das Gleichheitszeichen (`=`)**: Es wird immer genau ein Leerzeichen vor und nach einem Gleichheitszeichen sichergestellt.
+    * **Vorher:** `Format=HL7`
+    * **Nachher:** `Format = HL7`
+
+* **Leerzeichen nach Trennzeichen (`,` und `;`)**: Nach einem Komma oder Semikolon wird immer genau ein Leerzeichen eingefügt. Leerzeichen *vor* diesen Zeichen werden entfernt.
+    * **Vorher:** `Fields=Value ,Date;Comment`
+    * **Nachher:** `Fields = Value, Date; Comment`
+
+* **Keine Leerzeichen innerhalb von Klammern (`[]`)**: Alle Leerzeichen direkt nach einer öffnenden `[` und vor einer schließenden `]` Klammer werden entfernt.
+    * **Vorher:** `[ Orders ]`
+    * **Nachher:** `[Orders]`
+
+* **Reduzierung von mehrfachen Leerzeichen**: Mehrere aufeinanderfolgende Leerzeichen werden zu einem einzigen zusammengefasst. Einzüge am Zeilenanfang bleiben dabei erhalten.
+    * **Vorher:** `Records  =  All   Format   =   CSV`
+    * **Nachher:** `Records = All Format = CSV`
+
+---
+
+## Snippets: Schnellbausteine für Ihre Abfragen
+
+Um Ihnen den Einstieg zu erleichtern, haben wir einige Code-Schnipsel (Snippets) vorbereitet. Tippen Sie einfach den **Präfix** und drücken Sie `Enter` oder `Tab`, um den Code-Block einzufügen.
+
+| Präfix     | Beschreibung                                                                               |
+| :--------- | :----------------------------------------------------------------------------------------- |
+| `icmOrders`  | Erstellt eine Basisabfrage für Daten aus der **Tageskurve** (Keyword: `Orders`).             |
+| `icmReports` | Erstellt eine Basisabfrage für Daten aus den **Beurteilungsseiten** (Keyword: `Reports`).    |
+| `icmCodes`   | Erstellt eine Basisabfrage für **kodierte Diagnosen oder Prozeduren** (Keyword: `Codes`).    |
+| `icmPat`     | Fragt spezifische **demographische Patientendaten** ab (Keyword: `Pat`).                    |
+| `icmSystem`  | Fragt **Systeminformationen** wie den aktuellen Benutzer oder die Stations-ID ab.            |
+| `icmFormatGroup`| Fügt eine **Formatierungsanweisung** mit Gruppierung (WITHIN...DO) ein.            |
+| `icmJcf`     | Erstellt die **Grundstruktur für eine ICM Export Job-Steuerdatei** (`.jcf`).                 |
+| `icmFullJob` | Erstellt einen **vollständigen, zeitgesteuerten Export-Job** für alle Stationspatienten.     |
+| `icmDop`     | Definiert einen **abgeleiteten Verordnungsparameter (DOP)** zum Abruf von Werten aus der Tageskurve. |
+
+---
+
+## Erste Schritte
+
+Damit die Extension Ihre ICM-Sprache versteht, benötigt sie eine "Wörterbuch-Datei" (genannt `dsl_icm.json`).
+
+1.  **Pfad zum Wörterbuch festlegen**: Sagen Sie VS Code, wo diese Datei in Ihrem Projekt liegt. Öffnen Sie dazu die Einstellungen (als JSON-Datei) und fügen Sie folgende Zeile hinzu. Passen Sie den Pfad bei Bedarf an:
+    ```json
+    {
+      "icm.schemaPath": "schemas/dsl_icm.json"
+    }
+    ```
+2.  **Änderungen übernehmen**: Wenn Sie das Wörterbuch mal ändern, nutzen Sie den Befehl **`ICM: Schema neu laden`** (über `Ctrl+Shift+P`), damit die Extension die neuen Begriffe lernt.
+
+---
 
 ## Projektstruktur
 
@@ -23,66 +111,12 @@ Eine VS-Code-Erweiterung für die Dräger ICM Query DSL. Sie bietet Syntax-Highl
 └─ tsconfig.json             # TypeScript-Konfiguration für den Build nach `dist/`
 ```
 
-## Erste Schritte
+---
 
-1. Repository klonen und in den Projektordner wechseln.
-2. Abhängigkeiten installieren:
-   ```bash
-   npm install
-   ```
-3. TypeScript nach `dist/` kompilieren:
-   ```bash
-   npm run compile
-   ```
-   Alternativ für kontinuierliches Bauen:
-   ```bash
-   npm run watch
-   ```
-4. Optional: Eine eigene `schemas/dsl_icm.json` vorbereiten und über die Einstellung `icm.schemaPath` einbinden (siehe unten).
+## Entwicklung & Debugging
 
-## Entwickeln (Extension Development Host)
+Falls Sie an der Extension selbst mitentwickeln möchten, können Sie sie ganz einfach in einer lokalen Testumgebung ausführen.
 
-1. `npm install` ausführen, falls noch nicht geschehen.
-2. In VS Code `F5` drücken. Dadurch startet ein Extension-Development-Host mit der lokal gebauten Version.
-3. Im Entwicklungs-Host eine Testdatei (z. B. `test.icmq`) anlegen oder öffnen und Funktionen der Erweiterung ausprobieren.
-4. Änderungen an `src/extension.ts` oder dem Schema speichern, anschließend den Befehl **„ICM: Schema neu laden“** (Command-Palette) ausführen oder den Development-Host neu laden, um Effekte sofort zu sehen.
-
-## Schema einbinden & aktualisieren
-
-1. Legen Sie Ihr Schema (z. B. `dsl_icm.json`) im Workspace ab, etwa unter `schemas/dsl_icm.json`.
-2. Ergänzen Sie in den VS-Code-Einstellungen (JSON oder Settings-UI):
-   ```json
-   {
-     "icm.schemaPath": "schemas/dsl_icm.json"
-   }
-   ```
-   Relative Pfade beziehen sich auf den aktuellen Workspace-Ordner.
-3. Nach Änderungen am Schema den Befehl **„ICM: Schema neu laden“** ausführen, damit Autocomplete, Hover und Diagnostik aktualisiert werden.
-
-## Snippets & Beispiele
-
-- Nutzen Sie die Präfixe `icmOrders`, `icmReports`, `icmCodes`, `icmPat` usw., um vorbereitete Query-Blöcke einzufügen.
-- Im Schema gepflegte `examples` erscheinen als zusätzliche Snippet-Vorschläge in leeren Zeilen.
-- Eigene Snippets können Sie durch Anpassungen in `snippets/icm.code-snippets.json` ergänzen.
-
-## Paketieren & Installation
-
-1. Build aktualisieren:
-   ```bash
-   npm run compile
-   ```
-2. VSIX-Paket erzeugen:
-   ```bash
-   npm run package
-   ```
-   Die Datei `icm-dsl-support-<version>.vsix` wird im Projektstamm erstellt.
-3. Installation in VS Code:
-   - GUI: Extensions-Ansicht → `⋯` → **Install from VSIX...** → erzeugte Datei auswählen.
-   - CLI: `code --install-extension icm-dsl-support-<version>.vsix`
-4. Nach erfolgreicher Installation VS Code neu laden und unter „Installiert“ prüfen, ob die Erweiterung aktiv ist.
-
-## Nützliche Hinweise
-
-- Halten Sie das Schema konsistent – fehlende Felder, falsch deklarierte Enums oder Syntaxfehler werden beim Laden gemeldet.
-- Nutzen Sie die Watch-Aufgabe (`npm run watch`), um beim Entwickeln sofort aktuelle Builds zu erhalten.
-- Die Publisher-Angabe in `package.json` muss vor einer Veröffentlichung im Marketplace auf Ihren Account angepasst werden.
+1.  Öffnen Sie das Projekt in VS Code.
+2.  Stellen Sie sicher, dass alle Abhängigkeiten installiert sind (`npm install`).
+3.  Drücken Sie `F5`, um den **"Extension Development Host"** zu starten. Es öffnet sich ein neues VS Code-Fenster, in dem Ihre Extension bereits geladen und aktiv ist. Hier können Sie Ihre Änderungen live testen.
