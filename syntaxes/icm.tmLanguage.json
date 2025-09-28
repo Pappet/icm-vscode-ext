@@ -2,17 +2,14 @@
   "scopeName": "source.icm",
   "patterns": [
     { "include": "#comments" },
-    { "include": "#strings" },
     { "include": "#ini-sections" },
-    { "include": "#keystring-blocks" },
-    { "include": "#numbers" },
-    { "include": "#format-macros" }
+    { "include": "#keystring-blocks" }
   ],
   "repository": {
     "comments": {
       "patterns": [
-        { "name": "comment.line.semicolon.icm", "match": ";.*$" },
-        { "name": "comment.line.number-sign.icm", "match": "#.*$" }
+        { "name": "comment.line.semicolon.icm", "match": "^\\s*;.*$" },
+        { "name": "comment.line.number-sign.icm", "match": "^\\s*#.*$" }
       ]
     },
     "strings": {
@@ -24,26 +21,26 @@
     "numbers": {
       "patterns": [
         { "name": "constant.numeric.hex.icm", "match": "\\b&h[0-9a-fA-F]+\\b" },
-        { "name": "constant.numeric.decimal.icm", "match": "\\b\\d+(?:[.,]\\d+)?\\b" }
+        { "name": "constant.numeric.decimal.icm", "match": "\\b\\d+([.,]\\d+)?\\b" }
       ]
     },
     "ini-sections": {
       "patterns": [{
-        "name": "entity.name.tag.ini.icm",
-        "begin": "(\\[)",
-        "end": "(\\])",
-        "beginCaptures": { "1": { "name": "punctuation.definition.tag.begin.icm" } },
-        "endCaptures": { "1": { "name": "punctuation.definition.tag.end.icm" } }
+        "name": "entity.name.section.ini.icm",
+        "match": "^\\[([^\\]:]+)\\]",
+        "captures": {
+          "1": { "name": "entity.name.tag.icm" }
+        }
       }]
     },
     "keystring-blocks": {
       "patterns": [{
         "name": "meta.keystring.icm",
-        "begin": "(\\[)([A-Za-z_][A-Za-z0-9_]*)(:)?",
+        "begin": "(\\[)([A-Za-z_][A-Za-z0-9_]*)(:)",
         "end": "(\\])",
         "beginCaptures": {
           "1": { "name": "punctuation.definition.block.begin.icm" },
-          "2": { "name": "entity.name.type.class.icm" },
+          "2": { "name": "entity.name.function.keyword.icm" },
           "3": { "name": "punctuation.separator.key-value.icm" }
         },
         "endCaptures": {
@@ -51,14 +48,7 @@
         },
         "patterns": [
           { "include": "#format-parameter-block" },
-          {
-             "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(=)",
-             "captures": {
-                 "1": {"name": "variable.parameter.icm"},
-                 "2": {"name": "keyword.operator.assignment.icm"}
-             }
-          },
-          { "include": "#strings" }
+          { "include": "#other-parameters" }
         ]
       }]
     },
@@ -71,9 +61,7 @@
         "4": { "name": "punctuation.definition.format.begin.icm" }
       },
       "end": "(\\)|\\})",
-      "endCaptures": {
-        "1": { "name": "punctuation.definition.format.end.icm" }
-      },
+      "endCaptures": { "1": { "name": "punctuation.definition.format.end.icm" } },
       "name": "meta.format-string.icm",
       "patterns": [
         { "include": "#format-macros" },
@@ -81,31 +69,65 @@
         { "include": "#functions" }
       ]
     },
+    "other-parameters": {
+      "patterns": [
+        {
+          "begin": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(=)",
+          "beginCaptures": {
+            "1": { "name": "variable.parameter.icm" },
+            "2": { "name": "keyword.operator.assignment.icm" }
+          },
+          "end": "(?=;|])",
+          "name": "meta.parameter.icm",
+          "patterns": [
+            { "include": "#parameter-values" }
+          ]
+        }
+      ]
+    },
+    "parameter-values": {
+      "patterns": [
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        {
+          "name": "constant.language.enum.icm",
+          "match": "\\b(All|Last|First|First\\+Last|Context|Selected|Past|Future|Distinct|Open|Planned|Confirmed|Overdue|Current|New|NotAdministered|AssignedPreOP|TextFile|WinWord|Excel|KeyWord|Printout|None|Ward|Archive|Changed|WardHistory|History|File|DismissalExecuted|FinalizationExecuted|DismissalOrFinalizationExecuted|PreOPFinalizationExecuted)\\b"
+        },
+        {
+          "name": "constant.language.range.icm",
+          "match": "\\b(CTX|NOW|ADM|DIS|PAS|FUT|FOS|LOE|PK0|PKN|BDT|SOT|DSF|DSU)\\b"
+        },
+        {
+          "name": "keyword.operator.icm",
+          "match": "\\.\\.\\.|[+\\-@]"
+        }
+      ]
+    },
     "format-macros": {
       "patterns": [
         { "name": "constant.character.escape.icm", "match": "\\\\(CR|LF|TAB|BKSP)" },
         { "name": "constant.character.escape.icm", "match": "\\\\fs\\d+" },
-        { "name": "constant.character.escape.icm", "match": "\\\\#\\w+" }
+        { "name": "constant.character.escape.icm", "match": "\\\\#[a-zA-Z]+" }
       ]
     },
     "macros": {
       "patterns": [
         {
-          "name": "variable.language.macro.icm",
-          "begin": "\\{",
-          "end": "\\}",
-          "patterns": [{
-            "match": "\\b(Begin|End|Duration|Macro|CT_Dose|CT_SubstRate|Date|Code|CodeText|ItemText|FreeText|GroupName|TreatmentName|CurrentUser|PatientsAge|DBPath|IniPathRemote)\\b",
-            "name": "variable.other.placeholder.icm"
-          }]
+          "name": "meta.placeholder.icm",
+          "match": "(\\{)([A-Za-z0-9_\\-]+)(\\})",
+          "captures": {
+            "1": { "name": "punctuation.definition.tag.begin.icm" },
+            "2": { "name": "entity.name.tag.icm" },
+            "3": { "name": "punctuation.definition.tag.end.icm" }
+          }
         }
       ]
     },
     "functions": {
       "patterns": [
         {
-          "name": "support.function.math.icm",
-          "match": "\\b(Count|Sum|Min|Max|Avg|DecodeEq|DecodeLs|DecodeGr|Round|Greater|Less|Equal|In|Id|Ig|Abs|Fix|Int|Sgn)\\b"
+          "name": "support.function.icm",
+          "match": "\\b(Count|Sum|Min|Max|Avg|DecodeEq|DecodeLs|DecodeGr|Round|Greater|Less|Equal|In|Id|Ig|e|W|Abs|Fix|Int|Sgn|Rnd|pi)\\b"
         }
       ]
     }
