@@ -61,6 +61,14 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.workspace.onDidOpenTextDocument(validateDoc, null, context.subscriptions);
   vscode.workspace.onDidChangeTextDocument(e => validateDoc(e.document), null, context.subscriptions);
   vscode.workspace.textDocuments.forEach(validateDoc);
+
+  // NEU: Registrierung des Formatters
+  context.subscriptions.push(
+    vscode.languages.registerDocumentFormattingEditProvider(
+        { language: 'icm-query' },
+        new IcmFormattingProvider()
+    )
+  );
 }
 
 class IcmCompletionProvider implements vscode.CompletionItemProvider {
@@ -219,8 +227,10 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
     const bodyRaw = blockContent.slice(colonIdx + 1);
     const body = bodyRaw.trim();
     
+    // KORRIGIERTE PRÜFUNG für Pflichtparameter
     for (const req of keywordSpec.required_params ?? []) {
-        if (!body.includes(`${req}=`)) {
+        const requiredParamRegex = new RegExp(`\\b${req}\\s*=`);
+        if (!requiredParamRegex.test(bodyRaw)) {
             diags.push(makeDiag(
                 doc,
                 kwStart,
@@ -466,3 +476,51 @@ function loadSchema(showErrors = false) {
 }
 
 export function deactivate() { }
+
+// =======================================================
+// NEUE KLASSE FÜR DIE FORMATIERUNG
+// =======================================================
+class IcmFormattingProvider implements vscode.DocumentFormattingEditProvider {
+    provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.ProviderResult<vscode.TextEdit[]> {
+        const edits: vscode.TextEdit[] = [];
+        for (let i = 0; i < document.lineCount; i++) {
+            const line = document.lineAt(i);
+            if (line.isEmptyOrWhitespace) {
+                continue;
+            }
+
+            let originalText = line.text;
+            let newText = originalText;
+            
+            // Regel: Überflüssige Leerzeichen am Ende entfernen
+            newText = newText.trimEnd();
+
+            // Formatiere nur den Inhalt von KeyString-Blöcken
+            const blockMatch = newText.match(/(\[)(.*?)(\])/);
+            if (blockMatch && blockMatch.index !== undefined) {
+                const prefix = newText.substring(0, blockMatch.index + 1);
+                let content = blockMatch[2];
+                const suffix = newText.substring(blockMatch.index + 1 + content.length);
+
+                // Regel: Ein Leerzeichen nach dem Doppelpunkt
+                content = content.replace(/:\s*/, ': ');
+
+                // Regel: Leerzeichen um das Gleichheitszeichen
+                content = content.replace(/\s*=\s*/g, ' = ');
+
+                // Regel: Ein Leerzeichen nach dem Semikolon
+                content = content.replace(/;\s*/g, '; ');
+
+                // Regel: Ein Leerzeichen nach Kommas (z.B. in Property-Listen)
+                content = content.replace(/,\s*/g, ', ');
+
+                newText = prefix + content.trim() + suffix;
+            }
+            
+            if (newText !== originalText) {
+                edits.push(vscode.TextEdit.replace(line.range, newText));
+            }
+        }
+        return edits;
+    }
+}

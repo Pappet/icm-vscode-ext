@@ -36,7 +36,7 @@
     "keystring-blocks": {
       "patterns": [{
         "name": "meta.keystring.icm",
-        "begin": "(\\[)([A-Za-z_][A-Za-z0-9_]*)(:)",
+        "begin": "(\\[)([A-Za-z_][A-Za-z0-9_]*)((:))?",
         "end": "(\\])",
         "beginCaptures": {
           "1": { "name": "punctuation.definition.block.begin.icm" },
