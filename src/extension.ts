@@ -261,15 +261,15 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
         }
         seenFields.add(key);
         
+        const fieldSpec = findField(key);
+        if (!fieldSpec) {
+            diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Unbekanntes Feld '${key}'.`));
+            continue;
+        }
+        
         const allowedFields = keywordSpec.fields;
         if (allowedFields && !allowedFields.includes(key)) {
             diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist für Keyword '${header}' nicht gültig.`));
-            continue;
-        }
-
-        const field = findField(key);
-        if (!field) {
-            diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Unbekanntes Feld '${key}'.`));
             continue;
         }
 
@@ -280,28 +280,30 @@ function validateText(text: string, doc: vscode.TextDocument): vscode.Diagnostic
             valueSegmentOffset >= 0 ? partOffset + eqIdx + 1 + valueSegmentOffset : partOffset + eqIdx + 1;
         const absValStart = blockStart + valueStartOffset;
         const absValEnd = absValStart + value.length;
+        const rawValue = stripValue(value);
 
-        // GEÄNDERT: Spezielle Validierung für 'Range'
-        if (field.name === 'Range') {
-            const rawValue = stripValue(value);
-            if (rawValue && !isValidRangeValue(rawValue)) {
-                diags.push(
-                    makeDiag(doc, absValStart, absValEnd, `Ungültiger Wert '${rawValue}' für Feld 'Range'.`)
-                );
-            }
-        } else {
-            const enName = enumNameFromFieldType(field.type ?? '');
-            if (enName && schema.enums?.[enName]) {
-                const raw = stripValue(value);
-                if (raw && !schema.enums[enName].includes(raw)) {
+        if (rawValue) {
+             if (fieldSpec.type === 'number' && isNaN(Number(rawValue))) {
+                diags.push(makeDiag(doc, absValStart, absValEnd, `Feld '${key}' erwartet eine Zahl, aber '${rawValue}' wurde angegeben.`));
+            } else if (fieldSpec.name === 'Range') {
+                if (!isValidRangeValue(rawValue)) {
                     diags.push(
-                        makeDiag(
-                            doc,
-                            absValStart,
-                            absValEnd,
-                            `Ungültiger Wert '${raw}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
-                        )
+                        makeDiag(doc, absValStart, absValEnd, `Ungültiger Wert '${rawValue}' für Feld 'Range'.`)
                     );
+                }
+            } else {
+                const enName = enumNameFromFieldType(fieldSpec.type ?? '');
+                if (enName && schema.enums?.[enName]) {
+                    if (!schema.enums[enName].includes(rawValue)) {
+                        diags.push(
+                            makeDiag(
+                                doc,
+                                absValStart,
+                                absValEnd,
+                                `Ungültiger Wert '${rawValue}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
+                            )
+                        );
+                    }
                 }
             }
         }

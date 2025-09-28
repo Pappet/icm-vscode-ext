@@ -1,0 +1,64 @@
+; =======================================================
+;  Testdatei für die ICM-DSL-Fehlerprüfung
+; =======================================================
+
+; -------------------------------------------------------
+; 1. Korrekte Abfragen (sollten KEINE Fehler zeigen)
+; -------------------------------------------------------
+[Orders: TreatmentName='Heparin'; Range=All; Records=Last; Format=!({Begin}: {Macro}\CR)]
+[Codes: CodingSystem=ICD10; Range=All; Format=!({CodeText}\CR)]
+
+
+; -------------------------------------------------------
+; 2. Syntaxfehler: Klammerprobleme
+; -------------------------------------------------------
+
+; FEHLER: Fehlende schließende Klammer
+[Orders: Format=!({TreatmentName})
+
+; FEHLER: Unerwartete schließende Klammer
+Orders: Format=!({TreatmentName})]
+
+
+; -------------------------------------------------------
+; 3. Keyword-Fehler
+; -------------------------------------------------------
+
+; FEHLER: Unbekanntes Keyword 'Orderrs'
+[Orderrs: Format=!({TreatmentName})]
+
+
+; -------------------------------------------------------
+; 4. Feld-Fehler (Parameter)
+; -------------------------------------------------------
+
+; FEHLER: Unbekanntes Feld 'Reccords'
+[Orders: Reccords=Last; Format=!({Begin})]
+
+; FEHLER: Feld 'Admins' ist für das Keyword 'Codes' nicht gültig
+[Codes: Admins=All; Format=!({CodeText})]
+
+; FEHLER: Doppeltes Feld 'Range'
+[Orders: Range=All; Range=Past; Format=!({Begin})]
+
+
+; -------------------------------------------------------
+; 5. Wert-Fehler
+; -------------------------------------------------------
+
+; FEHLER: Ungültiger Enum-Wert 'Letzte' für das Feld 'Records'
+[Orders: Records=Letzte; Format=!({Begin})]
+
+; FEHLER: 'CaseID' erwartet eine Zahl, aber 'abc' wurde angegeben (Typprüfung)
+[Orders: CaseID=abc; Format=!({Begin})]
+
+; FEHLER: Ungültiges Format für den Zeitbereich in 'Range'
+[Orders: Range=NOW-1d-bis-morgen; Format=!({Begin})]
+
+
+; -------------------------------------------------------
+; 6. Anforderungs-Warnungen
+; -------------------------------------------------------
+
+; WARNUNG: Der empfohlene Parameter 'Format' fehlt für das Keyword 'Codes'
+[Codes: CodingSystem=ICD10]
