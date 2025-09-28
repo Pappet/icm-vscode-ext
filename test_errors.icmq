@@ -53,7 +53,7 @@ Orders: Format=!({TreatmentName})]
 [Orders: CaseID=abc; Format=!({Begin})]
 
 ; FEHLER: Ungültiges Format für den Zeitbereich in 'Range'
-[Orders: Range=NOW-1d-bis-morgen; Format=!({Begin})]
+[Orders: Range=NOW-1d...morgen; Format=!({Begin})]
 
 
 ; -------------------------------------------------------
