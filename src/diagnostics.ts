@@ -104,10 +104,13 @@ export function validateText(text: string, doc: vscode.TextDocument, schema: Sch
       const rawValue = stripValue(value);
 
       if (rawValue) {
-        if (fieldSpec.type === 'number' && isNaN(Number(rawValue))) {
+        if (fieldSpec.name === 'Range') {
+          if (!isValidRangeValue(rawValue, schema)) {
+            diags.push(makeDiag(doc, absValStart, absValEnd, `Ungültiger Wert '${rawValue}' für Feld 'Range'.`));
+          }
+        }
+        else if (fieldSpec.type === 'number' && isNaN(Number(rawValue))) {
           diags.push(makeDiag(doc, absValStart, absValEnd, `Feld '${key}' erwartet eine Zahl, aber '${rawValue}' wurde angegeben.`));
-        } else if (fieldSpec.name === 'Range' && !isValidRangeValue(rawValue, schema)) {
-          diags.push(makeDiag(doc, absValStart, absValEnd, `Ungültiger Wert '${rawValue}' für Feld 'Range'.`));
         } else {
           const enName = enumNameFromFieldType(fieldSpec.type ?? '');
           if (enName && schema.enums?.[enName] && !schema.enums[enName].includes(rawValue)) {
