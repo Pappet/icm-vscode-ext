@@ -4,15 +4,14 @@ import { IcmHoverProvider } from './providers/hover';
 import { IcmFormattingProvider } from './providers/formatter';
 import { validateText } from './diagnostics';
 import { loadSchema } from './util/schema';
-import { Schema } from './common/types';
 import { SchemaRef } from './common/schemaRef';
+import { IcmCodeActionProvider } from './providers/codeActions'; // HINZUGEFÜGT: Import für Code Actions
 
 let schemaRef: SchemaRef;
 let extensionRoot: string;
 
 export function activate(context: vscode.ExtensionContext) {
   extensionRoot = context.extensionUri.fsPath;
-  //console.log('Herzlichen Glückwunsch, Ihre Extension "icm-dsl-support" ist jetzt aktiv!');
   vscode.window.showInformationMessage('ICM-DSL Extension wurde aktiviert!');
   schemaRef = new SchemaRef(loadSchema(extensionRoot));
 
@@ -42,6 +41,17 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.languages.registerHoverProvider({ language: 'icm-query' }, new IcmHoverProvider(schemaRef))
+  );
+
+  // HINZUGEFÜGT: Registrierung des CodeActionProviders
+  context.subscriptions.push(
+    vscode.languages.registerCodeActionsProvider(
+      { language: 'icm-query' },
+      new IcmCodeActionProvider(schemaRef),
+      {
+        providedCodeActionKinds: IcmCodeActionProvider.providedCodeActionKinds
+      }
+    )
   );
 
   vscode.workspace.onDidOpenTextDocument(validateDoc, null, context.subscriptions);

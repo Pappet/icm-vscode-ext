@@ -2,6 +2,15 @@ import * as vscode from 'vscode';
 import { Schema } from './common/types';
 import { findKeyword, findField, stripValue, makeDiag, isValidRangeValue, enumNameFromFieldType } from './util/helpers';
 
+// Eindeutige Codes für unsere Diagnosen
+export const DIAGNOSTIC_CODES = {
+  MISSING_FORMAT: 'ICM001',
+  UNKNOWN_KEYWORD: 'ICM002',
+  UNKNOWN_FIELD: 'ICM003',
+  INVALID_BRACKETS: 'ICM004',
+  DUPLICATE_FIELD: 'ICM005' // NEU: Code für doppelte Felder
+};
+
 export function validateText(text: string, doc: vscode.TextDocument, schema: Schema): vscode.Diagnostic[] {
   const diags: vscode.Diagnostic[] = [];
   const stack: number[] = [];
@@ -11,12 +20,16 @@ export function validateText(text: string, doc: vscode.TextDocument, schema: Sch
     if (ch === '[') stack.push(i);
     if (ch === ']') {
       if (stack.pop() === undefined) {
-        diags.push(makeDiag(doc, i, i + 1, "Unerwartete schließende Klammer ']'."));
+        const diag = makeDiag(doc, i, i + 1, "Unerwartete schließende Klammer ']'.");
+        diag.code = DIAGNOSTIC_CODES.INVALID_BRACKETS;
+        diags.push(diag);
       }
     }
   }
   for (const idx of stack) {
-    diags.push(makeDiag(doc, idx, idx + 1, "Fehlende schließende Klammer ']'."));
+    const diag = makeDiag(doc, idx, idx + 1, "Fehlende schließende Klammer ']'.");
+    diag.code = DIAGNOSTIC_CODES.INVALID_BRACKETS;
+    diags.push(diag);
   }
 
   const blockRegex = /\[([\s\S]*?)\]/g;
@@ -31,70 +44,74 @@ export function validateText(text: string, doc: vscode.TextDocument, schema: Sch
     const headerOffset = headerSegment.search(/\S/);
     const kwStart = headerOffset >= 0 ? blockStart + headerOffset : blockStart;
     const kwEnd = kwStart + header.length;
-    const keywordSpec = findKeyword(header, schema);
 
-    if (!keywordSpec) {
-      diags.push(makeDiag(doc, kwStart, kwEnd, `Unbekanntes Keyword '${header}'.`));
+    if (!header) continue;
+
+    const kwSpec = findKeyword(header, schema);
+    if (!kwSpec) {
+      const diag = makeDiag(doc, kwStart, kwEnd, `Unbekanntes Keyword '${header}'.`);
+      diag.code = DIAGNOSTIC_CODES.UNKNOWN_KEYWORD;
+      diags.push(diag);
       continue;
     }
-    if (colonIdx < 0) continue;
-
-    const bodyRaw = blockContent.slice(colonIdx + 1);
-    for (const req of keywordSpec.required_params ?? []) {
-      const requiredParamRegex = new RegExp(`\\b${req}\\s*=`);
-      if (!requiredParamRegex.test(bodyRaw)) {
-        diags.push(
-          makeDiag(
-            doc,
-            kwStart,
-            kwEnd,
-            `Für das Keyword '${header}' wird der Parameter '${req}' dringend empfohlen.`,
+    
+    // GEÄNDERT: Prüfung auf fehlenden "Format"-Parameter für mehrere Keywords
+    const keywordsNeedingFormat = ['records', 'codes', 'orders'];
+    if (keywordsNeedingFormat.includes(header.toLowerCase()) && !/format\s*=/i.test(blockContent)) {
+        const range = new vscode.Range(doc.positionAt(kwStart), doc.positionAt(kwEnd));
+        const diag = new vscode.Diagnostic(
+            range,
+            `Der empfohlene Parameter 'Format' fehlt für das Keyword '${header}'.`,
             vscode.DiagnosticSeverity.Warning
-          )
         );
-      }
+        diag.code = DIAGNOSTIC_CODES.MISSING_FORMAT;
+        diags.push(diag);
     }
 
-    const partsRegex = /([^;]+)(?:;|$)/g;
-    const seenFields = new Set<string>();
-    let partMatch: RegExpExecArray | null;
+    if (colonIdx < 0) continue;
 
-    while ((partMatch = partsRegex.exec(bodyRaw)) !== null) {
-      const partText = partMatch[1];
-      const trimmedPart = partText.trim();
-      if (!trimmedPart) continue;
+    const body = blockContent.slice(colonIdx + 1);
+    // GEÄNDERT: Verwendet einen robusteren Regex, um nicht innerhalb von Anführungszeichen zu splitten
+    const parts = body.split(/;(?=(?:(?:[^"]*"){2})*[^"]*$)/g);
+    
+    // NEU: Logik zur Erkennung doppelter Felder
+    const seenKeys = new Set<string>();
 
-      const eqIdx = partText.indexOf('=');
+    for (const part of parts) {
+      if (!part.trim()) continue;
+      const partOffset = blockContent.indexOf(part, colonIdx + 1);
+      const eqIdx = part.indexOf('=');
       if (eqIdx < 0) continue;
 
-      const keySegment = partText.slice(0, eqIdx);
+      const keySegment = part.slice(0, eqIdx);
       const key = keySegment.trim();
-      if (!key) continue;
-
-      const keySegmentOffset = keySegment.search(/\S/);
-      const partOffset = colonIdx + 1 + partMatch.index;
-      const keyStartOffset = keySegmentOffset >= 0 ? partOffset + keySegmentOffset : partOffset;
-      const absKeyStart = blockStart + keyStartOffset;
+      const keyOffset = keySegment.search(/\S/);
+      const absKeyStart = blockStart + partOffset + (keyOffset >= 0 ? keyOffset : 0);
       const absKeyEnd = absKeyStart + key.length;
 
-      if (seenFields.has(key)) {
-        diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist in diesem Block doppelt vorhanden.`));
-        continue;
+      // NEU: Prüfung auf Duplikate
+      if (seenKeys.has(key.toLowerCase())) {
+        const diag = makeDiag(doc, absKeyStart, absKeyEnd, `Doppeltes Feld '${key}' im selben Block.`);
+        diag.code = DIAGNOSTIC_CODES.DUPLICATE_FIELD;
+        diags.push(diag);
+      } else {
+        seenKeys.add(key.toLowerCase());
       }
-      seenFields.add(key);
 
       const fieldSpec = findField(key, schema);
       if (!fieldSpec) {
-        diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Unbekanntes Feld '${key}'.`));
+        const diag = makeDiag(doc, absKeyStart, absKeyEnd, `Unbekanntes Feld '${key}'.`);
+        diag.code = DIAGNOSTIC_CODES.UNKNOWN_FIELD;
+        diags.push(diag);
         continue;
       }
 
-      if (keywordSpec.fields && !keywordSpec.fields.includes(key)) {
+      if (kwSpec.fields && !kwSpec.fields.includes(fieldSpec.name)) {
         diags.push(makeDiag(doc, absKeyStart, absKeyEnd, `Feld '${key}' ist für Keyword '${header}' nicht gültig.`));
         continue;
       }
 
-      const valueSegment = partText.slice(eqIdx + 1);
+      const valueSegment = part.slice(eqIdx + 1);
       const value = valueSegment.trim();
       const valueSegmentOffset = valueSegment.search(/\S/);
       const valueStartOffset =
@@ -119,7 +136,7 @@ export function validateText(text: string, doc: vscode.TextDocument, schema: Sch
                 doc,
                 absValStart,
                 absValEnd,
-                `Ungültiger Wert '${rawValue}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}.`
+                `Ungültiger Wert '${rawValue}' für Feld '${key}'. Erlaubt: ${schema.enums[enName].join(', ')}`
               )
             );
           }
@@ -127,5 +144,6 @@ export function validateText(text: string, doc: vscode.TextDocument, schema: Sch
       }
     }
   }
+
   return diags;
 }
