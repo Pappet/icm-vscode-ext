@@ -2,7 +2,7 @@
     "name": "icm-dsl-support",
     "displayName": "ICM DSL Support",
     "description": "Syntax, Autocomplete und Hilfen für Dräger ICM Query-DSL.",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "TODO",
     "engines": {
         "vscode": "^1.79.2"

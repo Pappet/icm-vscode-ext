@@ -43,7 +43,7 @@
         "end": "(\\])",
         "beginCaptures": {
           "1": { "name": "punctuation.definition.block.begin.icm" },
-          "2": { "name": "entity.name.function.keyword.icm" },
+          "2": { "name": "entity.name.type.class.icm" },
           "3": { "name": "punctuation.separator.key-value.icm" }
         },
         "endCaptures": {
@@ -51,7 +51,13 @@
         },
         "patterns": [
           { "include": "#format-parameter-block" },
-          { "include": "#other-parameters" },
+          {
+             "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(=)",
+             "captures": {
+                 "1": {"name": "variable.parameter.icm"},
+                 "2": {"name": "keyword.operator.assignment.icm"}
+             }
+          },
           { "include": "#strings" }
         ]
       }]
@@ -74,14 +80,6 @@
         { "include": "#macros" },
         { "include": "#functions" }
       ]
-    },
-    "other-parameters": {
-        "patterns": [
-            {
-              "name": "variable.parameter.icm",
-              "match": "\\b(Range|Records|Sort|Admins|Boxes|WorkFlowStatus|OrderSelection|ContentType|CodingSystem|Items|InstanceID|TreatmentName|Notion|Export|Property|Type|Template|Target|Schedule|CaseLoop)\\b(?==)"
-            }
-        ]
     },
     "format-macros": {
       "patterns": [
